@@ -131,7 +131,7 @@ class AppScaffold extends ConsumerWidget {
               title: const Text('Datenbedarf'),
               onTap: () {
                 if(context.mounted){
-                  GoRouter.of(context).goNamed('datarequests');
+                  GoRouter.of(context).goNamed('dataRequests');
                 }
               },
             ),
@@ -139,7 +139,7 @@ class AppScaffold extends ConsumerWidget {
               title: const Text('Meine Daten'),
               onTap: () {
                 if(context.mounted){
-                  GoRouter.of(context).goNamed('my-datasets');
+                  GoRouter.of(context).goNamed('myDatasets');
                 }
               },
             ),
