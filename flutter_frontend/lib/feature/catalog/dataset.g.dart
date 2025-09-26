@@ -21,7 +21,7 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   requiresCertificate: json['requiresCertificate'] as bool,
   requiredCertificateTypes:
       (json['requiredCertificateTypes'] as List<dynamic>)
-          .map((e) => e as String)
+          .map((e) => CertificateType.fromJson(e as String))
           .toList(),
   certificateRequirements: json['certificateRequirements'] as String?,
   dataSensitivity: $enumDecode(

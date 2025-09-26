@@ -1,5 +1,6 @@
 // dataset.dart
 
+import 'package:flutter_frontend/feature/user/certificate.entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'dataset.g.dart';
@@ -48,7 +49,7 @@ class Dataset {
   final String? dataUrl;
   final String? documentationUrl;
   final bool requiresCertificate;
-  final List<String> requiredCertificateTypes;
+  final List<CertificateType> requiredCertificateTypes;
   final String? certificateRequirements;
   final DataSensitivity dataSensitivity;
   final List<dynamic> accessRequests;
@@ -86,7 +87,6 @@ class Dataset {
     required this.additionalMetadata,
   });
 
-  factory Dataset.fromJson(Map<String, dynamic> json) =>
-      _$DatasetFromJson(json);
+  factory Dataset.fromJson(Map<String, dynamic> json) => _$DatasetFromJson(json);
   Map<String, dynamic> toJson() => _$DatasetToJson(this);
 }

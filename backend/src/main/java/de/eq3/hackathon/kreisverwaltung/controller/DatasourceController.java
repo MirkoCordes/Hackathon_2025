@@ -2,6 +2,7 @@ package de.eq3.hackathon.kreisverwaltung.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class DatasourceController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<Datasource>> getAllDatasources(
+	public ResponseEntity<Map<String,List<Datasource>>> getAllDatasources(
 			@RequestParam(required = false) String title,
 			@RequestParam(required = false) String description,
 			@RequestParam(required = false) Datasource.Category category,
@@ -71,7 +72,7 @@ public class DatasourceController {
 			}
 		}
 
-		return ResponseEntity.ok(datasources);
+		return ResponseEntity.ok(Map.of("datasources", datasources));
 	}
 
 	@GetMapping("/{id}")
@@ -129,7 +130,7 @@ public class DatasourceController {
 
 	@GetMapping("/my-accessible")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<List<Datasource>> getMyAccessibleDatasources() {
+	public ResponseEntity<Map<String, List<Datasource>>> getMyAccessibleDatasources() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 
@@ -138,7 +139,7 @@ public class DatasourceController {
 		}
 
 		List<Datasource> accessible = datasourceService.getAccessibleDatasources(currentUser);
-		return ResponseEntity.ok(accessible);
+		return ResponseEntity.ok(Map.of("datasources", accessible));
 	}
 
 	@GetMapping("/{id}/can-access")
