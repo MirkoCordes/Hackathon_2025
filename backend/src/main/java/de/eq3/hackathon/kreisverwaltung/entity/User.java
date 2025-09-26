@@ -1,9 +1,12 @@
 package de.eq3.hackathon.kreisverwaltung.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +20,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = { "certificates", "accessRequests" })
+@ToString(exclude = { "certificates", "accessRequests" })
 public class User implements UserDetails {
 
     @Id
@@ -52,9 +57,11 @@ public class User implements UserDetails {
 
     // === BEZIEHUNGEN ===
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference("user-certificates")
     private List<Certificate> certificates = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference("user-accessrequests")
     private List<DataAccessRequest> accessRequests = new ArrayList<>();
 
     public enum Role {
