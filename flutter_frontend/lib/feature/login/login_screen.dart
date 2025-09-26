@@ -86,7 +86,7 @@ class LoginScreen extends ConsumerWidget {
                           _passwordController.text,
                         );
                         if (context.mounted) {
-                          await GoRouter.of(context).push('/catalog');
+                          GoRouter.of(context).goNamed('catalog');
                         }
                       },
                       child: const Text(
