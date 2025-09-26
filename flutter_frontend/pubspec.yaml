@@ -35,6 +35,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   json_annotation: ^4.9.0
   http: ^0.13.6
+  json_serializable: ^6.8.0
 
 dev_dependencies:
   flutter_test:
