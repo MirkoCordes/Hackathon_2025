@@ -60,7 +60,7 @@ class AppScaffold extends ConsumerWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color(0xFFE9E9DD)),
               child: Image.asset('assets/images/LogoGroßTransparent2.png'),
             ),
             ListTile(
