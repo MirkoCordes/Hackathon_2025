@@ -143,7 +143,7 @@ public class DataAccessRequestController {
     // === ADMIN/REVIEWER ENDPOINTS ===
 
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
     public ResponseEntity<List<DataAccessRequest>> getPendingRequests() {
         List<DataAccessRequest.Status> pendingStatuses = Arrays.asList(
                 DataAccessRequest.Status.PENDING,
@@ -160,7 +160,7 @@ public class DataAccessRequestController {
     }
 
     @PostMapping("/{id}/review")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
     public ResponseEntity<?> reviewRequest(
             @PathVariable Long id,
             @RequestParam DataAccessRequest.Status status,

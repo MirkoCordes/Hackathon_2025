@@ -135,7 +135,8 @@ public class CertificateController {
         User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 
         Optional<Certificate> certificateOpt = certificateService.getCertificateById(id);
-        if (certificateOpt.isEmpty()) return ResponseEntity.notFound().build();
+        if (certificateOpt.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Certificate cert = certificateOpt.get();
 
@@ -148,7 +149,8 @@ public class CertificateController {
         }
 
         Optional<org.springframework.core.io.Resource> resourceOpt = certificateService.getCertificateResource(id);
-        if (resourceOpt.isEmpty()) return ResponseEntity.notFound().build();
+        if (resourceOpt.isEmpty())
+            return ResponseEntity.notFound().build();
 
         org.springframework.core.io.Resource resource = resourceOpt.get();
         String contentType = cert.getFileType() != null ? cert.getFileType() : "application/octet-stream";
@@ -160,11 +162,13 @@ public class CertificateController {
     }
 
     @GetMapping("/types")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Certificate.CertificateType[]> getCertificateTypes() {
         return ResponseEntity.ok(Certificate.CertificateType.values());
     }
 
     @GetMapping("/categories")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Certificate.CertificateCategory[]> getCertificateCategories() {
         return ResponseEntity.ok(Certificate.CertificateCategory.values());
     }
@@ -172,7 +176,7 @@ public class CertificateController {
     // === ADMIN/REVIEWER ENDPOINTS ===
 
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
     public ResponseEntity<List<Certificate>> getPendingCertificates() {
         List<Certificate> pending = certificateService.getPendingCertificates();
         return ResponseEntity.ok(pending);
@@ -186,7 +190,7 @@ public class CertificateController {
     }
 
     @PostMapping("/{id}/review")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
     public ResponseEntity<?> reviewCertificate(
             @PathVariable Long id,
             @RequestParam Certificate.Status status,
@@ -210,7 +214,7 @@ public class CertificateController {
     }
 
     @GetMapping("/expiring-soon")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('REVIEWER')")
+    @PreAuthorize("hasAnyRole('REVIEWER','ADMIN')")
     public ResponseEntity<List<Certificate>> getExpiringSoonCertificates() {
         List<Certificate> expiring = certificateService.getExpiringSoonCertificates();
         return ResponseEntity.ok(expiring);
