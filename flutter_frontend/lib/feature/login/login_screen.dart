@@ -36,6 +36,13 @@ class LoginScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Logo above the login form
+                  Image.asset(
+                    'assets/images/LogoGroßTransparent2.png',
+                    height: 120,
+                  ),
+                  const SizedBox(height: 24),
+
                   // E-Mail/Benutzername
                   TextFormField(
                     controller: _usernameController,
