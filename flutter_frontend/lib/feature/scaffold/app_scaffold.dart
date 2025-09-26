@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/certificate/certificate_review_widget.dart';
 import 'package:flutter_frontend/feature/logout/logout.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
 
 class AppScaffold extends ConsumerWidget {
   final Widget body;
@@ -11,10 +11,9 @@ class AppScaffold extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-  final LogoutController logoutController = ref.read(
-    logoutControllerProvider.notifier,
-  );
+    final LogoutController logoutController = ref.read(
+      logoutControllerProvider.notifier,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +31,8 @@ class AppScaffold extends ConsumerWidget {
                 )
                 : null,
         actions: [
+          // Certificate review icon - navigates to /certificates/review using push so it can be popped/closed
+          CertificateReviewWidget(),
           // User profile icon - navigates to /user using push so it can be popped/closed
           IconButton(
             tooltip: 'Profil',
@@ -46,12 +47,39 @@ class AppScaffold extends ConsumerWidget {
             icon: const Icon(Icons.logout),
             onPressed: () async {
               await logoutController.logout();
-              if(context.mounted){
+              if (context.mounted) {
                 GoRouter.of(context).go('/');
               }
             },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Color(0xFFE9E9DD)),
+              child: Image.asset('assets/images/LogoGroßTransparent2.png'),
+            ),
+            ListTile(
+              title: const Text('Datenbedarf'),
+              onTap: () {
+                if(context.mounted){
+                  GoRouter.of(context).goNamed('datarequests');
+                }
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
       ),
       body: body,
     );
