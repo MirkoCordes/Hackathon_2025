@@ -150,43 +150,7 @@ class CertificateWidget extends ConsumerWidget {
             } catch (_) {}
           },
         ),
-        TextButton(
-          onPressed: showConfirmationDialog(),
-          child: Text('Neues Zertifikat erstellen'),
-        ),
       ],
-    );
-  }
-
-  Future<void> showConfirmationDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      // Der Builder erstellt das eigentliche Dialog-Widget
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Änderungen speichern'),
-          content: const Text('Möchten Sie die Änderungen wirklich speichern?'),
-          actions: <Widget>[
-            // Button zum Schließen des Pop-ups ohne Aktion
-            TextButton(
-              child: const Text('ABBRECHEN'),
-              onPressed: () {
-                // Schließt den Dialog und gibt null zurück
-                Navigator.of(context).pop();
-              },
-            ),
-            // Button zum Bestätigen
-            TextButton(
-              child: const Text('SPEICHERN'),
-              onPressed: () {
-                // Führt eine Aktion aus und schließt dann
-                print('Daten gespeichert.');
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 

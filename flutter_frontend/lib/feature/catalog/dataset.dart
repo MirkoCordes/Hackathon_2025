@@ -72,7 +72,7 @@ enum DataSensitivity {
 @JsonSerializable()
 class Dataset {
   final int id;
-  final bool hasAccess;
+  final bool? hasAccess;
   final String title;
   final String description;
   final Category category;
@@ -99,7 +99,7 @@ class Dataset {
   Dataset({
     required this.id,
     required this.title,
-    required this.hasAccess,
+    this.hasAccess,
     required this.description,
     required this.category,
     required this.dataFormat,
@@ -123,6 +123,7 @@ class Dataset {
     required this.additionalMetadata,
   });
 
-  factory Dataset.fromJson(Map<String, dynamic> json) => _$DatasetFromJson(json);
+  factory Dataset.fromJson(Map<String, dynamic> json) =>
+      _$DatasetFromJson(json);
   Map<String, dynamic> toJson() => _$DatasetToJson(this);
 }

@@ -9,7 +9,7 @@ part of 'dataset.dart';
 Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   id: (json['id'] as num).toInt(),
   title: json['title'] as String,
-  hasAccess: json['hasAccess'] as bool,
+  hasAccess: json['hasAccess'] as bool?,
   description: json['description'] as String,
   category: $enumDecode(_$CategoryEnumMap, json['category']),
   dataFormat: $enumDecode(_$DataFormatEnumMap, json['dataFormat']),

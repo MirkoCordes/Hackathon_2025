@@ -47,14 +47,14 @@ class DatasetListWidget extends StatelessWidget {
 
             // Optional: Gesamten Eintrag klickbar machen
             onTap: () async {
-              if (e.hasAccess) {
+              if (e.hasAccess != null && e.hasAccess!) {
                 await router.pushNamed(
                   'datasources',
                   pathParameters: pathParams,
                 );
               }
             },
-            enabled: e.hasAccess,
+            enabled: e.hasAccess ?? false,
           ),
         );
       },
@@ -74,7 +74,7 @@ class DatasetListIconButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (e.hasAccess) {
+    if (e.hasAccess != null && e.hasAccess!) {
       return IconButton(
         onPressed: () async {
           await router.pushNamed('datasources', pathParameters: pathParams);
@@ -87,11 +87,43 @@ class DatasetListIconButton extends ConsumerWidget {
     return IconButton(
       onPressed: () async {
         // TODO: request new certificate
-
-        await router.pushNamed('datasources', pathParameters: pathParams);
+        await showConfirmationDialog(context);
+        //await router.pushNamed('datasources', pathParameters: pathParams);
       },
       icon: const Icon(Icons.key),
       color: Theme.of(context).colorScheme.primary,
+    );
+  }
+
+  Future<void> showConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      // Der Builder erstellt das eigentliche Dialog-Widget
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Änderungen speichern'),
+          content: const Text('Möchten Sie die Änderungen wirklich speichern?'),
+          actions: <Widget>[
+            // Button zum Schließen des Pop-ups ohne Aktion
+            TextButton(
+              child: const Text('ABBRECHEN'),
+              onPressed: () {
+                // Schließt den Dialog und gibt null zurück
+                Navigator.of(context).pop();
+              },
+            ),
+            // Button zum Bestätigen
+            TextButton(
+              child: const Text('SPEICHERN'),
+              onPressed: () {
+                // Führt eine Aktion aus und schließt dann
+                print('Daten gespeichert.');
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
