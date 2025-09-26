@@ -1,7 +1,6 @@
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/feature/user/certificate.entity.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:flutter_frontend/feature/user/certificate.entity.dart';
 
 part 'user.entity.g.dart';
 
@@ -30,6 +29,16 @@ class User {
   @JsonKey(name: 'jobTitle')
   final String? jobTitle;
 
+  // Counts returned by backend UserProfileDto
+  @JsonKey(defaultValue: 0)
+  final int activeCertificatesCount;
+
+  @JsonKey(defaultValue: 0)
+  final int totalCertificatesCount;
+
+  @JsonKey(defaultValue: 0)
+  final int accessRequestsCount;
+
   // Relationships - oft als separate API calls geladen
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<Certificate>? certificates;
@@ -45,6 +54,9 @@ class User {
     this.lastName,
     this.organization,
     this.jobTitle,
+    this.activeCertificatesCount = 0,
+    this.totalCertificatesCount = 0,
+    this.accessRequestsCount = 0,
     this.certificates,
   });
 
@@ -92,6 +104,9 @@ class User {
     String? lastName,
     String? organization,
     String? jobTitle,
+    int? activeCertificatesCount,
+    int? totalCertificatesCount,
+    int? accessRequestsCount,
     List<Certificate>? certificates,
   }) {
     return User(
@@ -105,6 +120,9 @@ class User {
       lastName: lastName ?? this.lastName,
       organization: organization ?? this.organization,
       jobTitle: jobTitle ?? this.jobTitle,
+      activeCertificatesCount: activeCertificatesCount ?? this.activeCertificatesCount,
+      totalCertificatesCount: totalCertificatesCount ?? this.totalCertificatesCount,
+      accessRequestsCount: accessRequestsCount ?? this.accessRequestsCount,
       certificates: certificates ?? this.certificates,
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_frontend/feature/catalog/catalog_screen.dart';
 import 'package:flutter_frontend/feature/login/login_screen.dart';
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
+import 'package:flutter_frontend/feature/user/user_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -14,6 +15,11 @@ final GoRouter router = GoRouter(
       path: '/catalog',
       builder: (context, state) => const AppScaffold(body: CatalogScreen()),
       name: 'catalog',
+    ),
+    GoRoute(
+      path: '/user',
+      name: 'user',
+      builder: (context, state) => const AppScaffold(body: UserProfilePage()),
     ),
   ],
 );
