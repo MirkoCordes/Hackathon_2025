@@ -21,7 +21,8 @@ class DatasourceDetailRepository {
       },
     );
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonMap = json.decode(response.body);
+      final String utf8Decodes = utf8.decode(response.bodyBytes);
+      final Map<String, dynamic> jsonMap = json.decode(utf8Decodes);
       return Dataset.fromJson(jsonMap);
     } else if (response.statusCode == 403) {
       throw Exception('Unauthorized');
