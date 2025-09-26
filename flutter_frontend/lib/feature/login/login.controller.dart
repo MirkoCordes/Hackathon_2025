@@ -15,6 +15,7 @@ class LoginController extends _$LoginController {
     final LoginRepository loginRepository = LoginRepository();
     final LoginResponse response = await loginRepository.login(username, pw);
     final JwtRepository jwtRepository = JwtRepository();
-    jwtRepository.setJwt(response.token);
+    await jwtRepository.setJwt(response.token);
+    await jwtRepository.setRole(response.role);
   }
 }
