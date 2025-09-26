@@ -19,17 +19,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.eq3.hackathon.kreisverwaltung.entity.Datasource;
+import de.eq3.hackathon.kreisverwaltung.repository.DatasourceRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/datasources")
 @RequiredArgsConstructor
 public class DatasourceController {
+	private final DatasourceRepository datasourceRepository;
 
 	@GetMapping
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<List<Datasource>> search(@RequestParam(value = "q", required = false) String query) {
-		return ResponseEntity.ok(new ArrayList<>());
+		return ResponseEntity.ok(datasourceRepository.findAll());
 	}
 
 	@PutMapping

@@ -1,8 +1,11 @@
 package de.eq3.hackathon.kreisverwaltung.config;
 
+import de.eq3.hackathon.kreisverwaltung.entity.Datasource;
 import de.eq3.hackathon.kreisverwaltung.entity.User;
+import de.eq3.hackathon.kreisverwaltung.repository.DatasourceRepository;
 import de.eq3.hackathon.kreisverwaltung.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -13,6 +16,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DatasourceRepository datasourceRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,9 +41,21 @@ public class DataInitializer implements CommandLineRunner {
             testUser.setPassword(passwordEncoder.encode("test123"));
             testUser.setRole(User.Role.USER);
             testUser.setEnabled(true);
-
             userRepository.save(testUser);
             System.out.println("✅ Default test user created: testuser / test123");
+        }
+
+        // Create default datasource if not exists
+        if (datasourceRepository.count() == 0) {
+            Datasource datasource = new Datasource();
+            // Keine ID setzen! @GeneratedValue macht das automatisch
+            datasource.getMetadata().put("name", "Beispiel Datenquelle");
+            datasource.getMetadata().put("category", "GOVERNMENT");
+            datasource.getMetadata().put("format", "CSV");
+            datasource.getMetadata().put("description", "Eine Beispiel-Datenquelle für das Hackathon-Projekt");
+
+            datasourceRepository.save(datasource);
+            System.out.println("✅ Default datasource created: Beispiel Datenquelle");
         }
     }
 }
