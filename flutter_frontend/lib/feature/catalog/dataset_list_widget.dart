@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
+import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.controller.dart';
 import 'package:flutter_frontend/router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatasetListWidget extends StatelessWidget {
   const DatasetListWidget({super.key, required this.datasets});
@@ -38,24 +41,55 @@ class DatasetListWidget extends StatelessWidget {
             ),
 
             // 5. Der Navigations-Button (Pfeil)
-            trailing: IconButton(
-              onPressed: () async {
+            trailing: DatasetListIconButton(e: e, pathParams: pathParams),
+
+            // Optional: Gesamten Eintrag klickbar machen
+            onTap: () async {
+              if (e.hasAccess) {
                 await router.pushNamed(
                   'datasources',
                   pathParameters: pathParams,
                 );
-              },
-              icon: const Icon(Icons.arrow_forward),
-              color: Theme.of(context).colorScheme.primary,
-            ),
-
-            // Optional: Gesamten Eintrag klickbar machen
-            onTap: () async {
-              await router.pushNamed('datasources', pathParameters: pathParams);
+              }
             },
+            enabled: e.hasAccess,
           ),
         );
       },
+    );
+  }
+}
+
+class DatasetListIconButton extends ConsumerWidget {
+  const DatasetListIconButton({
+    super.key,
+    required this.e,
+    required this.pathParams,
+  });
+
+  final Dataset e;
+  final Map<String, String> pathParams;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (e.hasAccess) {
+      return IconButton(
+        onPressed: () async {
+          await router.pushNamed('datasources', pathParameters: pathParams);
+        },
+        icon: const Icon(Icons.arrow_forward),
+        color: Theme.of(context).colorScheme.primary,
+      );
+    }
+
+    return IconButton(
+      onPressed: () async {
+        // TODO: request new certificate
+
+        await router.pushNamed('datasources', pathParameters: pathParams);
+      },
+      icon: const Icon(Icons.key),
+      color: Theme.of(context).colorScheme.primary,
     );
   }
 }

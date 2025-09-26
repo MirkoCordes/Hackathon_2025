@@ -47,6 +47,7 @@ enum LicenseType {
 @JsonSerializable()
 class Dataset {
   final int id;
+  final bool hasAccess;
   final String title;
   final String description;
   @JsonKey(unknownEnumValue: Category.unknown)
@@ -78,6 +79,7 @@ class Dataset {
   Dataset({
     required this.id,
     required this.title,
+    required this.hasAccess,
     required this.description,
     required this.category,
     required this.dataFormat,

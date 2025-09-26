@@ -35,8 +35,14 @@ class UserProfilePage extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(displayUser.displayName, style: Theme.of(context).textTheme.titleLarge),
-                        Text(displayUser.email, style: Theme.of(context).textTheme.bodyMedium),
+                        Text(
+                          displayUser.displayName,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Text(
+                          displayUser.email,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ],
                     ),
                   ],
@@ -70,13 +76,18 @@ class UserProfilePage extends ConsumerWidget {
 
                 // === Certificates Section ===
                 const Divider(),
-                const Text('Zertifikate', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Zertifikate',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 8),
 
                 // List of user's certificates (use outer ref)
                 Builder(
                   builder: (context) {
-                    final certState = ref.watch(certificateListControllerProvider);
+                    final certState = ref.watch(
+                      certificateListControllerProvider,
+                    );
                     return certState.when(
                       data:
                           (certs) => Column(
@@ -85,14 +96,22 @@ class UserProfilePage extends ConsumerWidget {
                                     .map(
                                       (c) => ListTile(
                                         title: Text(c.description),
-                                        subtitle: Text('${c.typeDisplayName} • ${c.statusDisplayName}'),
-                                        trailing: Text(c.isActive ? 'Aktiv' : c.statusDisplayName),
+                                        subtitle: Text(
+                                          '${c.typeDisplayName} • ${c.statusDisplayName}',
+                                        ),
+                                        trailing: Text(
+                                          c.isActive
+                                              ? 'Aktiv'
+                                              : c.statusDisplayName,
+                                        ),
                                       ),
                                     )
                                     .toList(),
                           ),
                       loading: () => const CircularProgressIndicator(),
-                      error: (e, st) => Text('Fehler beim Laden der Zertifikate: $e'),
+                      error:
+                          (e, st) =>
+                              Text('Fehler beim Laden der Zertifikate: $e'),
                     );
                   },
                 ),
@@ -101,16 +120,7 @@ class UserProfilePage extends ConsumerWidget {
 
                 // Upload form
                 const Divider(),
-                const Text('Neues Zertifikat hochladen', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                _CertificateUploadForm(
-                  onUploaded: () async {
-                    // refresh certificates after upload
-                    try {
-                      ref.invalidate(certificateListControllerProvider);
-                    } catch (_) {}
-                  },
-                ),
+                CertificateWidget(),
               ],
             ),
           ),
@@ -118,6 +128,70 @@ class UserProfilePage extends ConsumerWidget {
       error: (e, st) => Center(child: Text('Fehler: $e')),
     );
   }
+}
+
+class CertificateWidget extends ConsumerWidget {
+  const CertificateWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Text(
+          'Neues Zertifikat hochladen',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        _CertificateUploadForm(
+          onUploaded: () async {
+            // refresh certificates after upload
+            try {
+              ref.invalidate(certificateListControllerProvider);
+            } catch (_) {}
+          },
+        ),
+        TextButton(
+          onPressed: showConfirmationDialog(),
+          child: Text('Neues Zertifikat erstellen'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> showConfirmationDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      // Der Builder erstellt das eigentliche Dialog-Widget
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Änderungen speichern'),
+          content: const Text('Möchten Sie die Änderungen wirklich speichern?'),
+          actions: <Widget>[
+            // Button zum Schließen des Pop-ups ohne Aktion
+            TextButton(
+              child: const Text('ABBRECHEN'),
+              onPressed: () {
+                // Schließt den Dialog und gibt null zurück
+                Navigator.of(context).pop();
+              },
+            ),
+            // Button zum Bestätigen
+            TextButton(
+              child: const Text('SPEICHERN'),
+              onPressed: () {
+                // Führt eine Aktion aus und schließt dann
+                print('Daten gespeichert.');
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Aufruf im Code (z.B. in einem onPressed-Callback):
+  // await showConfirmationDialog(context);
 }
 
 class _CertificateUploadForm extends ConsumerStatefulWidget {
@@ -129,7 +203,8 @@ class _CertificateUploadForm extends ConsumerStatefulWidget {
   _CertificateUploadFormState createState() => _CertificateUploadFormState();
 }
 
-class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> {
+class _CertificateUploadFormState
+    extends ConsumerState<_CertificateUploadForm> {
   CertificateType? _selectedType;
   String _description = '';
   DateTime? _validUntil;
@@ -167,12 +242,16 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
   Future<void> _submit() async {
     // Validate inputs and provide feedback
     if (_selectedType == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bitte Typ auswählen')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Bitte Typ auswählen')));
       return;
     }
 
     if (_pickedFile == null && _pickedFileBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Bitte eine Datei auswählen')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bitte eine Datei auswählen')),
+      );
       return;
     }
 
@@ -204,9 +283,13 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
       } catch (_) {}
 
       await widget.onUploaded();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Upload erfolgreich')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Upload erfolgreich')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Upload fehlgeschlagen: $e')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Upload fehlgeschlagen: $e')));
     } finally {
       if (!mounted) return;
       setState(() => _submitting = false);
@@ -226,7 +309,15 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
                   (types) => DropdownButton<CertificateType>(
                     value: _selectedType,
                     hint: const Text('Typ auswählen'),
-                    items: types.map((t) => DropdownMenuItem(value: t, child: Text(t.displayName))).toList(),
+                    items:
+                        types
+                            .map(
+                              (t) => DropdownMenuItem(
+                                value: t,
+                                child: Text(t.displayName),
+                              ),
+                            )
+                            .toList(),
                     onChanged: (v) => setState(() => _selectedType = v),
                   ),
               loading: () => const CircularProgressIndicator(),
@@ -242,7 +333,10 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
         const SizedBox(height: 8),
         Row(
           children: [
-            ElevatedButton(onPressed: _pickFile, child: const Text('Datei auswählen')),
+            ElevatedButton(
+              onPressed: _pickFile,
+              child: const Text('Datei auswählen'),
+            ),
             const SizedBox(width: 8),
             Expanded(child: Text(_pickedFileName ?? 'Keine Datei gewählt')),
           ],
@@ -250,7 +344,10 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: _submit,
-          child: _submitting ? const CircularProgressIndicator() : const Text('Hochladen'),
+          child:
+              _submitting
+                  ? const CircularProgressIndicator()
+                  : const Text('Hochladen'),
         ),
       ],
     );
