@@ -7,18 +7,11 @@ class CatalogRepository {
   static const String url = "http://localhost:8080/api/datasources";
 
   Future<CatalogResponse> getCatalogs(String query) async {
-    if (query.isEmpty) {
-    } else {}
-
     final Map<String, String> header = {
       'Content-Type': 'application/json',
       'Authorization':
           'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODg4OTczOSwiZXhwIjoxNzU4OTc2MTM5fQ.CiGQba2cd2jR09VLGyRhHy1lVXULj2r_iUdOhme-JNQ',
       'title': query,
-      'description': '',
-      'category': '',
-      'accessLevel': '',
-      'dataFormat': '',
     };
 
     final response = await http.get(Uri.parse(url), headers: header);
