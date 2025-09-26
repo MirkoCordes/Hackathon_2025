@@ -2,12 +2,14 @@ package de.eq3.hackathon.kreisverwaltung.config;
 
 import de.eq3.hackathon.kreisverwaltung.entity.Certificate;
 import de.eq3.hackathon.kreisverwaltung.entity.DataAccessRequest;
+import de.eq3.hackathon.kreisverwaltung.entity.DataRequest;
 import de.eq3.hackathon.kreisverwaltung.entity.Datasource;
 import de.eq3.hackathon.kreisverwaltung.entity.User;
 import de.eq3.hackathon.kreisverwaltung.repository.CertificateRepository;
 import de.eq3.hackathon.kreisverwaltung.repository.DataAccessRequestRepository;
 import de.eq3.hackathon.kreisverwaltung.repository.DatasourceRepository;
 import de.eq3.hackathon.kreisverwaltung.repository.UserRepository;
+import de.eq3.hackathon.kreisverwaltung.repository.DataRequestRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -29,6 +31,7 @@ public class DataInitializer implements CommandLineRunner {
     private final DatasourceRepository datasourceRepository;
     private final CertificateRepository certificateRepository;
     private final DataAccessRequestRepository dataAccessRequestRepository;
+        private final DataRequestRepository dataRequestRepository;
 
     @Override
     @Transactional
@@ -36,6 +39,7 @@ public class DataInitializer implements CommandLineRunner {
         createUsers();
         createDatasources();
         createCertificates();
+                createDataRequests();
         createDataAccessRequests();
     }
 
@@ -545,6 +549,115 @@ public class DataInitializer implements CommandLineRunner {
         dataAccessRequestRepository.saveAll(requests);
         System.out.println("✅ Created " + requests.size() + " data access requests with various statuses");
     }
+
+        private void createDataRequests() {
+                if (dataAccessRequestRepository.count() > 0) {
+                        // We already seed access requests which are related; avoid duplicating
+                }
+
+                // Find some example users
+                User researcher = userRepository.findByUsername("forscher.uni").orElse(null);
+                User journalist = userRepository.findByUsername("journalist.nwz").orElse(null);
+                User ngo = userRepository.findByUsername("ngo.umwelt").orElse(null);
+
+                List<DataRequest> requests = new ArrayList<>();
+
+                if (researcher != null) {
+                        requests.add(createDataRequest(
+                                        "Aktuelle Verkehrsdaten für Modellierung",
+                                        "Ich benötige aggregierte Verkehrszählungen (Stunde/Tag) für die letzten 2 Jahre im Landkreis Leer zur Kalibrierung eines Verkehrssimulationsmodells.",
+                                        Datasource.Category.GOVERNMENT,
+                                        DataRequest.Priority.HIGH,
+                                        researcher,
+                                        "j.hofmann@uni-oldenburg.de",
+                                        "Statistische Analyse für Masterarbeit",
+                                        Datasource.DataFormat.CSV,
+                                        "Landkreis Leer",
+                                        "2023-2024",
+                                        "< 1GB",
+                                        DataRequest.UpdateFrequency.MONTHLY));
+
+                        requests.add(createDataRequest(
+                                        "Klimadaten Norderney - Langzeit",
+                                        "Zeitreihen (stündlich) der DWD Messstation Norderney für die letzten 30 Jahre, inkl. Temperatur, Niederschlag und Wind.",
+                                        Datasource.Category.SCIENCE,
+                                        DataRequest.Priority.MEDIUM,
+                                        researcher,
+                                        "j.hofmann@uni-oldenburg.de",
+                                        "Langzeit-Klimaanalyse",
+                                        Datasource.DataFormat.CSV,
+                                        "Norderney",
+                                        "1995-2024",
+                                        "~5GB",
+                                        DataRequest.UpdateFrequency.ONE_TIME));
+                }
+
+                if (journalist != null) {
+                        requests.add(createDataRequest(
+                                        "Lobbyistenkontakte Ostfriesland",
+                                        "Liste der registrierten Lobbyisten und Aktivitäten der letzten 12 Monate für eine investigative Recherche.",
+                                        Datasource.Category.CIVIL_SOCIETY,
+                                        DataRequest.Priority.MEDIUM,
+                                        journalist,
+                                        "redaktion@nwz-online.de",
+                                        "Recherche und Artikelserie",
+                                        Datasource.DataFormat.CSV,
+                                        "Ostfriesland",
+                                        "letzte 12 Monate",
+                                        "< 100MB",
+                                        DataRequest.UpdateFrequency.ON_DEMAND));
+                }
+
+                if (ngo != null) {
+                        requests.add(createDataRequest(
+                                        "Vogelzug-Detaildaten",
+                                        "Fehleruntersuchung: detaillierte Beobachtungsreihen (Zeitstempel, Art, Anzahl) für Rastplätze an der Küste.",
+                                        Datasource.Category.CIVIL_SOCIETY,
+                                        DataRequest.Priority.LOW,
+                                        ngo,
+                                        "daten@nabu-ostfriesland.de",
+                                        "Naturschutz-Auswertung",
+                                        Datasource.DataFormat.JSON,
+                                        "Küstenabschnitt Ostfriesland",
+                                        "Saisonabhängig",
+                                        "< 200MB",
+                                        DataRequest.UpdateFrequency.WEEKLY));
+                }
+
+                        // Persist created requests using DataRequestRepository (autowired)
+                        if (!requests.isEmpty()) {
+                                try {
+                                        dataRequestRepository.saveAll(requests);
+                                        System.out.println("✅ Created " + requests.size() + " example DataRequest entries");
+                                } catch (Exception e) {
+                                        System.out.println("⚠️ Failed to save example DataRequest entries: " + e.getMessage());
+                                }
+                        } else {
+                                System.out.println("ℹ️ No example DataRequest entries to create");
+                        }
+        }
+
+        private DataRequest createDataRequest(String title, String description, Datasource.Category category,
+                        DataRequest.Priority priority, User user, String contactEmail, String intendedUse,
+                        Datasource.DataFormat preferredFormat, String geographicScope, String timeScope, String dataSize,
+                        DataRequest.UpdateFrequency updateFrequency) {
+                DataRequest req = new DataRequest();
+                req.setTitle(title);
+                req.setDescription(description);
+                req.setCategory(category);
+                req.setPriority(priority);
+                req.setStatus(DataRequest.Status.OPEN);
+                req.setUser(user);
+                req.setContactEmail(contactEmail);
+                req.setIntendedUse(intendedUse);
+                req.setPreferredFormat(preferredFormat);
+                req.setGeographicScope(geographicScope);
+                req.setTimeScope(timeScope);
+                req.setDataSize(dataSize);
+                req.setUpdateFrequency(updateFrequency);
+                req.setCreatedAt(LocalDateTime.now().minusDays((long) (Math.random() * 30)));
+                return req;
+        }
 
     private DataAccessRequest createAccessRequest(User user, Datasource datasource, Certificate certificate,
             String requestReason, String intendedUse, int statusVariant) {
