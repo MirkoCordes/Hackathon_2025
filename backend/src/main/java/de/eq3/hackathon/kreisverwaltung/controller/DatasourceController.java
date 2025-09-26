@@ -73,6 +73,19 @@ public class DatasourceController {
 			}
 		}
 
+		// If user authenticated, set the transient hasAccess flag on each datasource
+		User currentUser = null;
+		if (auth != null && auth.isAuthenticated()) {
+			currentUser = userService.findByUsername(auth.getName()).orElse(null);
+		}
+		for (Datasource ds : datasources) {
+			if (currentUser != null) {
+				ds.setHasAccess(currentUser.canAccessDatasource(ds));
+			} else {
+				ds.setHasAccess(false);
+			}
+		}
+
 		return ResponseEntity.ok(Map.of("datasources", datasources));
 	}
 

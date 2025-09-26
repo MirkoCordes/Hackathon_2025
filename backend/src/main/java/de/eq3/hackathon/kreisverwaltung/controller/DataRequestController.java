@@ -36,7 +36,7 @@ public class DataRequestController {
     // === MARKETPLACE OVERVIEW ===
 
     @GetMapping
-    public ResponseEntity<Map<String,List<DataRequest>>> getMarketplace(
+    public ResponseEntity<Map<String, List<DataRequest>>> getMarketplace(
             @RequestParam(defaultValue = "OPEN") DataRequest.Status status,
             @RequestParam(required = false) Datasource.Category category,
             @RequestParam(required = false) String search) {
@@ -166,7 +166,7 @@ public class DataRequestController {
 
     @GetMapping("/my-requests")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String,List<DataRequest>>> getMyRequests() {
+    public ResponseEntity<Map<String, List<DataRequest>>> getMyRequests() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 
@@ -182,13 +182,15 @@ public class DataRequestController {
 
     /**
      * Respond to a data request identified by path variable {@code requestId}.
-     * The request body should be a {@link de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto}
-     * containing the response details. Clients should NOT include a nested DataRequest in the body.
+     * The request body should be a
+     * {@link de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto}
+     * containing the response details. Clients should NOT include a nested
+     * DataRequest in the body.
      */
     @PostMapping("/requests/{requestId}/responses")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> respondToDataRequest(@PathVariable Long requestId,
-        @RequestBody de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto dto) {
+            @RequestBody de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto dto) {
         Optional<DataRequest> requestOpt = dataRequestRepository.findById(requestId);
         if (requestOpt.isEmpty()) {
             return ResponseEntity.notFound().build();

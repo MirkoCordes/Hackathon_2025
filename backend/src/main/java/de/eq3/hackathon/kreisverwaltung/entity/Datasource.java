@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -84,6 +85,12 @@ public class Datasource {
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY)
 	@JsonManagedReference("datasource-accessrequests")
 	private List<DataAccessRequest> accessRequests = new ArrayList<>();
+
+	// Transient runtime-only flag set by controllers to indicate whether the
+	// current requesting user has access to this datasource. Not persisted.
+	@Transient
+	@JsonProperty("hasAccess")
+	private Boolean hasAccess;
 
 	// === METADATA ===
 	@Column
