@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/logout/logout.controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AppScaffold extends StatelessWidget {
+
+class AppScaffold extends ConsumerWidget {
   final Widget body;
 
   const AppScaffold({super.key, required this.body});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+  final LogoutController logoutController = ref.read(
+    logoutControllerProvider.notifier,
+  );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hackathon 2025'),
@@ -31,6 +39,16 @@ class AppScaffold extends StatelessWidget {
             onPressed: () async {
               // Push the user profile route so it can be closed (popped) with an X
               await GoRouter.of(context).push('/user');
+            },
+          ),
+          IconButton(
+            tooltip: 'Log Out',
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await logoutController.logout();
+              if(context.mounted){
+                GoRouter.of(context).go('/');
+              }
             },
           ),
         ],

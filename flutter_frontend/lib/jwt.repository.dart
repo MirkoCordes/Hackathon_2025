@@ -26,4 +26,10 @@ class JwtRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(roleKey, role.name);
   }
+
+  Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
 }
