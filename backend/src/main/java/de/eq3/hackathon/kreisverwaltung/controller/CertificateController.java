@@ -128,6 +128,37 @@ public class CertificateController {
         return ResponseEntity.ok(cert);
     }
 
+    @GetMapping("/{id}/file")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> downloadCertificateFile(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.findByUsername(auth.getName()).orElse(null);
+
+        Optional<Certificate> certificateOpt = certificateService.getCertificateById(id);
+        if (certificateOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Certificate cert = certificateOpt.get();
+
+        // Authorization: owner or ADMIN/REVIEWER
+        if (!cert.getUser().equals(currentUser) &&
+                currentUser != null &&
+                currentUser.getRole() != User.Role.ADMIN &&
+                currentUser.getRole() != User.Role.REVIEWER) {
+            return ResponseEntity.status(403).build();
+        }
+
+        Optional<org.springframework.core.io.Resource> resourceOpt = certificateService.getCertificateResource(id);
+        if (resourceOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        org.springframework.core.io.Resource resource = resourceOpt.get();
+        String contentType = cert.getFileType() != null ? cert.getFileType() : "application/octet-stream";
+
+        return ResponseEntity.ok()
+                .header("Content-Type", contentType)
+                .header("Content-Disposition", "attachment; filename=\"" + cert.getFileName() + "\"")
+                .body(resource);
+    }
+
     @GetMapping("/types")
     public ResponseEntity<Certificate.CertificateType[]> getCertificateTypes() {
         return ResponseEntity.ok(Certificate.CertificateType.values());
