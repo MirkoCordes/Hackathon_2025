@@ -101,12 +101,18 @@ class DatasetListIconButton extends ConsumerWidget {
       // Der Builder erstellt das eigentliche Dialog-Widget
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Änderungen speichern'),
-          content: const Text('Möchten Sie die Änderungen wirklich speichern?'),
+          title: const Text('Zertifikat hinzufügen'),
+          content: Column(
+            children: [
+              const Text(
+                'Laden sie hier das benötigte Zertifikat hoch, um den Zugriff zu beantragen.',
+              ),
+            ],
+          ),
           actions: <Widget>[
             // Button zum Schließen des Pop-ups ohne Aktion
             TextButton(
-              child: const Text('ABBRECHEN'),
+              child: const Text('Abbrechen'),
               onPressed: () {
                 // Schließt den Dialog und gibt null zurück
                 Navigator.of(context).pop();
@@ -114,10 +120,11 @@ class DatasetListIconButton extends ConsumerWidget {
             ),
             // Button zum Bestätigen
             TextButton(
-              child: const Text('SPEICHERN'),
+              child: const Text('Hinzufügen'),
               onPressed: () {
                 // Führt eine Aktion aus und schließt dann
-                print('Daten gespeichert.');
+
+                print('Zertifikat hinzugefügt');
                 Navigator.of(context).pop();
               },
             ),
