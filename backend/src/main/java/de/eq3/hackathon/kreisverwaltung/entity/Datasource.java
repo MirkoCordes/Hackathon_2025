@@ -6,16 +6,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "datasources")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = { "accessRequests" })
+@ToString(exclude = { "accessRequests" })
 public class Datasource {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +66,7 @@ public class Datasource {
 	private Boolean requiresCertificate = false; // Requires certificate for access
 
 	// Required certificate types - simple like tags!
-	@ElementCollection(targetClass = Certificate.CertificateType.class)
+	@ElementCollection(targetClass = Certificate.CertificateType.class, fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "datasource_required_certificates", joinColumns = @JoinColumn(name = "datasource_id"))
 	@Column(name = "certificate_type")
@@ -77,6 +82,7 @@ public class Datasource {
 	// === RELATIONSHIPS ===
 	// Relationships to Access Requests
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY)
+	@JsonManagedReference("datasource-accessrequests")
 	private List<DataAccessRequest> accessRequests = new ArrayList<>();
 
 	// === METADATA ===

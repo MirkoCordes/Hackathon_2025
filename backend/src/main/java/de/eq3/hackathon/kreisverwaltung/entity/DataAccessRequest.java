@@ -1,9 +1,12 @@
 package de.eq3.hackathon.kreisverwaltung.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +15,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = { "user", "datasource", "certificate" })
+@ToString(exclude = { "user", "datasource", "certificate" })
 public class DataAccessRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +24,12 @@ public class DataAccessRequest {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("user-accessrequests")
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "datasource_id", nullable = false)
+    @JsonBackReference("datasource-accessrequests")
     private Datasource datasource;
 
     @ManyToOne
