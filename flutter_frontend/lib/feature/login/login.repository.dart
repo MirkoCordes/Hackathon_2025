@@ -4,7 +4,7 @@ import 'package:flutter_frontend/feature/login/login_response.model.dart';
 import 'package:http/http.dart' as http;
 
 class LoginRepository {
-  static const String url = "http://localhost:8080/api/login";
+  static const String url = "http://localhost:8080/api/auth/login";
 
   String getJwt() {
     return 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODg3ODExMSwiZXhwIjoxNzU4OTY0NTExfQ.SBsI-H3oZHu79t7_AbnmLvWAskyFOJt2zWd5mqLDw3M';
@@ -20,6 +20,9 @@ class LoginRepository {
     final response = await http.post(
       Uri.parse(url),
       body: jsonEncode(loginPayload),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     );
     if (response.statusCode == 200) {
       // Login erfolgreich, der Server gibt die Benutzerdaten zurück
