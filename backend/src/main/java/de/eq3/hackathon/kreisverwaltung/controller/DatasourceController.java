@@ -36,8 +36,8 @@ public class DatasourceController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Datasource> create(@Validated @RequestBody Datasource request,
 			Authentication authentication) {
-		Datasource created = new Datasource();
-		return ResponseEntity.status(HttpStatus.CREATED).body(created);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(request);
 	}
 
 	@PostMapping("/{id}")
