@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
 
         // Create default datasources if none exist
         if (datasourceRepository.count() == 0) {
-            // Beispiel 1: Öffentliche Verkehrsdaten
+            // Example 1: Public traffic data
             Datasource verkehrsdaten = new Datasource();
             verkehrsdaten.setTitle("Verkehrsströme Landkreis Leer");
             verkehrsdaten.setDescription(
@@ -70,7 +70,7 @@ public class DataInitializer implements CommandLineRunner {
             verkehrsdaten.getAdditionalMetadata().put("Messstandorte", "15 Zählstellen");
             verkehrsdaten.getAdditionalMetadata().put("Zeitraum", "Seit 2020");
 
-            // Beispiel 2: Umweltdaten mit Zertifikat
+            // Example 2: Environmental data with certificate
             Datasource umweltdaten = new Datasource();
             umweltdaten.setTitle("Grundwasser-Messwerte Aurich");
             umweltdaten.setDescription(
@@ -95,7 +95,7 @@ public class DataInitializer implements CommandLineRunner {
             umweltdaten.getAdditionalMetadata().put("Messstellen", "45 Brunnen");
             umweltdaten.getAdditionalMetadata().put("Parameter", "pH, Nitrat, Schwermetalle, Pestizide");
 
-            // Beispiel 3: Wirtschaftsdaten
+            // Example 3: Economic data
             Datasource wirtschaftsdaten = new Datasource();
             wirtschaftsdaten.setTitle("Tourismusstatistik Wittmund");
             wirtschaftsdaten.setDescription(
@@ -112,7 +112,7 @@ public class DataInitializer implements CommandLineRunner {
             wirtschaftsdaten.setDataSensitivity(Datasource.DataSensitivity.PUBLIC);
             wirtschaftsdaten.getTags().addAll(List.of("Tourismus", "Wirtschaft", "Statistik", "Wittmund"));
 
-            // Beispiel 4: Gesundheitsdaten (sehr sensibel)
+            // Example 4: Health data (highly sensitive)
             Datasource gesundheitsdaten = new Datasource();
             gesundheitsdaten.setTitle("Anonymisierte Krankenhausstatistik Emden");
             gesundheitsdaten.setDescription(
@@ -135,7 +135,7 @@ public class DataInitializer implements CommandLineRunner {
                     .setCertificateRequirements("Nur für Gesundheitsbehörden, medizinische Forschung oder Ärzte");
             gesundheitsdaten.getTags().addAll(List.of("Gesundheit", "Epidemiologie", "Anonymisiert", "Forschung"));
 
-            // Beispiel 5: NGO-Transparenzdaten
+            // Example 5: NGO transparency data
             Datasource transparenzdaten = new Datasource();
             transparenzdaten.setTitle("Lobbyisten-Register Ostfriesland");
             transparenzdaten.setDescription(

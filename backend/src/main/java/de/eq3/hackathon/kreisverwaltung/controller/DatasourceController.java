@@ -50,7 +50,7 @@ public class DatasourceController {
 
 		List<Datasource> datasources;
 
-		// Filterung anwenden
+		// Apply filtering
 		if (tags != null && !tags.isEmpty()) {
 			List<String> tagList = Arrays.asList(tags.split(","));
 			datasources = datasourceService.getDatasourcesByTags(tagList);
@@ -61,7 +61,7 @@ public class DatasourceController {
 			datasources = datasourceService.getAllDatasources();
 		}
 
-		// Nur zugängliche Datenquellen anzeigen (falls gewünscht)
+		// Show only accessible datasources (if desired)
 		if (onlyAccessible && auth != null && auth.isAuthenticated()) {
 			User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 			if (currentUser != null) {

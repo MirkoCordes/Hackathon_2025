@@ -48,13 +48,13 @@ public class CertificateService {
             String description, MultipartFile file,
             LocalDateTime validUntil) throws IOException {
 
-        // Datei-Validierung
+        // File validation
         validateFile(file);
 
-        // Datei speichern
+        // Save file
         String fileName = saveFile(file);
 
-        // Certificate Entity erstellen
+        // Create Certificate entity
         Certificate certificate = new Certificate();
         certificate.setUser(user);
         certificate.setType(type);
@@ -104,13 +104,13 @@ public class CertificateService {
             throw new RuntimeException("File is empty");
         }
 
-        // Größenbeschränkung: 10MB
+        // Size limit: 10MB
         long maxSize = 10 * 1024 * 1024;
         if (file.getSize() > maxSize) {
             throw new RuntimeException("File size exceeds 10MB limit");
         }
 
-        // Erlaubte Dateitypen
+        // Allowed file types
         String contentType = file.getContentType();
         if (contentType == null ||
                 (!contentType.equals("application/pdf") &&
@@ -121,19 +121,19 @@ public class CertificateService {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        // Upload-Verzeichnis erstellen falls nicht vorhanden
+        // Create upload directory if not exists
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        // Eindeutigen Dateinamen generieren
+        // Generate unique filename
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf("."))
                 : "";
         String fileName = UUID.randomUUID().toString() + extension;
 
-        // Datei speichern
+        // Save file
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath);
 

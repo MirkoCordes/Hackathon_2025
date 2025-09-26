@@ -12,24 +12,24 @@ import java.util.List;
 @Repository
 public interface CertificateRepository extends JpaRepository<Certificate, Long> {
 
-    // Alle Zertifikate eines Users
+    // All certificates of a user
     List<Certificate> findByUser(User user);
 
-    // Aktive Zertifikate eines Users
+    // Active certificates of a user
     List<Certificate> findByUserAndStatus(User user, Certificate.Status status);
 
-    // Alle Zertifikate die Überprüfung brauchen
+    // All certificates that need review
     List<Certificate> findByStatusIn(List<Certificate.Status> statuses);
 
-    // Zertifikate die bald ablaufen (nächste 30 Tage)
+    // Certificates expiring soon (next 30 days)
     @Query("SELECT c FROM Certificate c WHERE c.validUntil BETWEEN :now AND :thirtyDaysFromNow AND c.status = :approved")
     List<Certificate> findExpiringSoon(LocalDateTime now, LocalDateTime thirtyDaysFromNow, Certificate.Status approved);
 
-    // Abgelaufene Zertifikate
+    // Expired certificates
     @Query("SELECT c FROM Certificate c WHERE c.validUntil < :now AND c.status = :approved")
     List<Certificate> findExpired(LocalDateTime now, Certificate.Status approved);
 
-    // Zertifikate nach Typ für einen User
+    // Certificates by type for a user
     List<Certificate> findByUserAndTypeAndStatus(User user, Certificate.CertificateType type,
             Certificate.Status status);
 }

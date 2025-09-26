@@ -45,10 +45,10 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column
-    private String organization; // Firma/Institution des Nutzers
+    private String organization; // Company/Institution of the user
 
     @Column
-    private String jobTitle; // Berufsbezeichnung
+    private String jobTitle; // Job title
 
     // === BEZIEHUNGEN ===
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -87,17 +87,17 @@ public class User implements UserDetails {
     }
 
     public boolean canAccessDatasource(Datasource datasource) {
-        // Öffentliche Datenquellen sind für alle zugänglich
+        // Public datasources are accessible to everyone
         if (datasource.getAccessLevel() == Datasource.AccessLevel.PUBLIC) {
             return true;
         }
 
-        // Keine Zertifikate erforderlich
+        // No certificates required
         if (!datasource.getRequiresCertificate() || datasource.getRequiredCertificateTypes().isEmpty()) {
             return true;
         }
 
-        // Prüfe ob User eines der erforderlichen Zertifikate hat
+        // Check if user has one of the required certificates
         return datasource.getRequiredCertificateTypes().stream()
                 .anyMatch(this::hasActiveCertificateOfType);
     }

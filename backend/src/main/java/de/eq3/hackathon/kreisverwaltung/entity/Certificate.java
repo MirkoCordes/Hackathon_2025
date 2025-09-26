@@ -26,35 +26,35 @@ public class Certificate {
     private CertificateType type;
 
     @Column(nullable = false)
-    private String fileName; // Original Dateiname
+    private String fileName; // Original filename
 
     @Column(nullable = false)
-    private String filePath; // Pfad zur gespeicherten Datei
+    private String filePath; // Path to stored file
 
     @Column(nullable = false)
-    private String fileType; // MIME-Type (application/pdf, image/jpeg, etc.)
+    private String fileType; // MIME type (application/pdf, image/jpeg, etc.)
 
     @Column
-    private Long fileSize; // Dateigröße in Bytes
+    private Long fileSize; // File size in bytes
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status = Status.PENDING;
 
     @Column(length = 1000)
-    private String description; // Beschreibung vom Nutzer
+    private String description; // Description from user
 
     @Column(length = 1000)
-    private String reviewNotes; // Notizen vom Prüfer
+    private String reviewNotes; // Review notes from reviewer
 
     @Column
-    private String reviewedBy; // Username des Prüfers
+    private String reviewedBy; // Username of reviewer
 
     @Column
-    private LocalDateTime reviewedAt; // Wann geprüft
+    private LocalDateTime reviewedAt; // When reviewed
 
     @Column
-    private LocalDateTime validUntil; // Gültig bis (falls Zertifikat Ablaufdatum hat)
+    private LocalDateTime validUntil; // Valid until (if certificate has expiry date)
 
     @Column(nullable = false)
     private LocalDateTime uploadedAt;
@@ -62,52 +62,50 @@ public class Certificate {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // === AUTOMATISCHE ABLAUF-ÜBERWACHUNG ===
+    // === AUTOMATIC EXPIRY MONITORING ===
     @Column
-    private Boolean notificationSent = false; // Wurden Ablauf-Warnungen versendet?
+    private Boolean notificationSent = false; // Were expiry warnings sent?
 
     @Column
-    private LocalDateTime lastNotificationSent; // Wann letzte Warnung versendet
+    private LocalDateTime lastNotificationSent; // When last warning was sent
 
     public enum CertificateType {
-        // === BEHÖRDLICHE ZERTIFIKATE ===
+        // === GOVERNMENT CERTIFICATES ===
         GOVERNMENT_GENERAL("Behörde Allgemein", "Allgemeiner Behördennachweis"),
         GOVERNMENT_ENVIRONMENT("Behörde Umwelt", "Umweltbehörde, Wasserwirtschaft"),
         GOVERNMENT_HEALTH("Behörde Gesundheit", "Gesundheitsamt, Seuchenschutz"),
         GOVERNMENT_STATISTICS("Behörde Statistik", "Statistisches Amt"),
         GOVERNMENT_PLANNING("Behörde Planung", "Stadtplanung, Raumordnung"),
-
-        // === FORSCHUNGSZERTIFIKATE ===
+        
+        // === RESEARCH CERTIFICATES ===
         RESEARCH_UNIVERSITY("Universität", "Hochschul-Zugehörigkeit"),
         RESEARCH_ENVIRONMENTAL("Umweltforschung", "Institute für Umwelt- und Klimaforschung"),
         RESEARCH_HEALTH("Medizinische Forschung", "Medizinische Fakultäten, Kliniken"),
         RESEARCH_SOCIAL("Sozialforschung", "Soziologie, Demographie"),
         RESEARCH_ECONOMIC("Wirtschaftsforschung", "Wirtschaftsinstitute"),
-
-        // === BERUFSZERTIFIKATE ===
+        
+        // === PROFESSIONAL CERTIFICATES ===
         PROFESSIONAL_LAWYER("Rechtsanwalt", "Anwaltskammer-Zulassung"),
         PROFESSIONAL_DOCTOR("Arzt/Mediziner", "Ärztekammer-Zulassung"),
         PROFESSIONAL_ENGINEER("Ingenieur", "Ingenieurskammer, Sachverständiger"),
         PROFESSIONAL_JOURNALIST("Journalist", "Presseausweis"),
         PROFESSIONAL_CONSULTANT("Berater", "Zertifizierte Beratung"),
-
-        // === UNTERNEHMENSZERTIFIKATE ===
+        
+        // === BUSINESS CERTIFICATES ===
         BUSINESS_GENERAL("Unternehmen Allgemein", "Gewerbeschein, Handelsregister"),
         BUSINESS_ENVIRONMENTAL("Umweltunternehmen", "Umwelttechnik, Entsorgung"),
         BUSINESS_HEALTHCARE("Gesundheitsunternehmen", "Pharma, Medizintechnik"),
         BUSINESS_CONSULTING("Beratungsunternehmen", "Zertifizierte Unternehmensberatung"),
         BUSINESS_MEDIA("Medienunternehmen", "Presse, Rundfunk, Online-Medien"),
-
-        // === ZIVILGESELLSCHAFT ===
+        
+        // === CIVIL SOCIETY ===
         NGO_ENVIRONMENTAL("Umwelt-NGO", "Greenpeace, NABU, etc."),
         NGO_SOCIAL("Soziale NGO", "Caritas, DRK, etc."),
         NGO_TRANSPARENCY("Transparenz-NGO", "FragDenStaat, Lobbycontrol"),
-
-        // === BASIS-NACHWEISE ===
+        
+        // === BASIC PROOFS ===
         PERSONAL_ID("Personalausweis", "Amtlicher Lichtbildausweis"),
-        OTHER("Sonstiges", "Andere Nachweise");
-
-        private final String displayName;
+        OTHER("Sonstiges", "Andere Nachweise");        private final String displayName;
         private final String description;
 
         CertificateType(String displayName, String description) {
@@ -123,7 +121,7 @@ public class Certificate {
             return description;
         }
 
-        // Hilfsmethoden für Kategorisierung
+        // Helper methods for categorization
         public CertificateCategory getCategory() {
             if (name().startsWith("GOVERNMENT_"))
                 return CertificateCategory.GOVERNMENT;
@@ -198,7 +196,7 @@ public class Certificate {
         }
     }
 
-    // Hilfsmethoden
+    // Helper methods
     public boolean isActive() {
         return status == Status.APPROVED &&
                 (validUntil == null || validUntil.isAfter(LocalDateTime.now()));
@@ -220,7 +218,7 @@ public class Certificate {
 
     public long getDaysUntilExpiry() {
         if (validUntil == null)
-            return -1; // Kein Ablaufdatum
+            return -1; // No expiry date
         return java.time.temporal.ChronoUnit.DAYS.between(LocalDateTime.now(), validUntil);
     }
 }

@@ -34,22 +34,22 @@ public class DataAccessRequest {
     private Status status = Status.PENDING;
 
     @Column(length = 1000)
-    private String requestReason; // Warum braucht der Nutzer die Daten?
+    private String requestReason; // Why does the user need the data?
 
     @Column(length = 1000)
-    private String intendedUse; // Wofür sollen die Daten verwendet werden?
+    private String intendedUse; // What will the data be used for?
 
     @Column(length = 1000)
-    private String reviewNotes; // Notizen vom Prüfer
+    private String reviewNotes; // Notes from the reviewer
 
     @Column
-    private String reviewedBy; // Username des Prüfers
+    private String reviewedBy; // Username of the reviewer
 
     @Column
-    private LocalDateTime reviewedAt; // Wann geprüft
+    private LocalDateTime reviewedAt; // When reviewed
 
     @Column
-    private LocalDateTime accessGrantedUntil; // Zugang gültig bis
+    private LocalDateTime accessGrantedUntil; // Access valid until
 
     @Column(nullable = false)
     private LocalDateTime requestedAt;
@@ -78,7 +78,7 @@ public class DataAccessRequest {
         requestedAt = LocalDateTime.now();
     }
 
-    // Hilfsmethoden
+    // Helper methods
     public boolean hasActiveAccess() {
         return status == Status.APPROVED &&
                 (accessGrantedUntil == null || accessGrantedUntil.isAfter(LocalDateTime.now()));

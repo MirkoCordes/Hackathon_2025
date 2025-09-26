@@ -31,7 +31,7 @@ public class DatasourceService {
         datasourceRepository.deleteById(id);
     }
 
-    // Suche und Filterung
+    // Search and filtering
     public List<Datasource> searchDatasources(String title, String description,
             Datasource.Category category,
             Datasource.AccessLevel accessLevel,
@@ -49,7 +49,7 @@ public class DatasourceService {
         return datasourceRepository.findByTagsIn(tags);
     }
 
-    // Zugangsberechtigungen prüfen
+    // Check access permissions
     public List<Datasource> getAccessibleDatasources(User user) {
         return getAllDatasources().stream()
                 .filter(user::canAccessDatasource)

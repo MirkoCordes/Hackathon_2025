@@ -16,7 +16,7 @@ public interface DatasourceRepository extends JpaRepository<Datasource, Long> {
     @NonNull
     List<Datasource> findAll();
 
-    // Suche und Filterung
+    // Search and filtering
     List<Datasource> findByTitleContainingIgnoreCase(String title);
 
     List<Datasource> findByCategory(Datasource.Category category);

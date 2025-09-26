@@ -117,7 +117,7 @@ public class CertificateController {
 
         Certificate cert = certificate.get();
 
-        // Nur eigene Zertifikate oder Admin/Reviewer können alle sehen
+        // Only own certificates or Admin/Reviewer can see all
         if (!cert.getUser().equals(currentUser) &&
                 currentUser != null &&
                 currentUser.getRole() != User.Role.ADMIN &&

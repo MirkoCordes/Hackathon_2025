@@ -43,7 +43,7 @@ public class DataAccessRequestController {
                 return ResponseEntity.status(401).body("User not found");
             }
 
-            // Datasource validieren
+            // Validate datasource
             Optional<Datasource> datasourceOpt = datasourceService.getDatasourceById(requestDto.getDatasourceId());
             if (datasourceOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("Datasource not found");
@@ -51,7 +51,7 @@ public class DataAccessRequestController {
 
             Datasource datasource = datasourceOpt.get();
 
-            // Certificate validieren
+            // Validate certificate
             Optional<Certificate> certificateOpt = certificateService.getCertificateById(requestDto.getCertificateId());
             if (certificateOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("Certificate not found");
@@ -59,17 +59,17 @@ public class DataAccessRequestController {
 
             Certificate certificate = certificateOpt.get();
 
-            // Prüfen ob Certificate dem User gehört
+            // Check if certificate belongs to user
             if (!certificate.getUser().equals(currentUser)) {
                 return ResponseEntity.status(403).body("Certificate does not belong to user");
             }
 
-            // Prüfen ob Certificate aktiv ist
+            // Check if certificate is active
             if (!certificate.isActive()) {
                 return ResponseEntity.badRequest().body("Certificate is not active");
             }
 
-            // Prüfen ob bereits ein Request existiert
+            // Check if request already exists
             List<DataAccessRequest.Status> activeStatuses = Arrays.asList(
                     DataAccessRequest.Status.PENDING,
                     DataAccessRequest.Status.UNDER_REVIEW,
@@ -79,7 +79,7 @@ public class DataAccessRequestController {
                 return ResponseEntity.badRequest().body("You already have an active request for this datasource");
             }
 
-            // Request erstellen
+            // Create request
             DataAccessRequest accessRequest = new DataAccessRequest();
             accessRequest.setUser(currentUser);
             accessRequest.setDatasource(datasource);
@@ -129,7 +129,7 @@ public class DataAccessRequestController {
 
         DataAccessRequest request = requestOpt.get();
 
-        // Nur eigene Requests oder Admin/Reviewer können alle sehen
+        // Only own requests or Admin/Reviewer can see all
         if (!request.getUser().equals(currentUser) &&
                 currentUser != null &&
                 currentUser.getRole() != User.Role.ADMIN &&

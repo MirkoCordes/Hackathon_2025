@@ -21,77 +21,75 @@ public class Datasource {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// === PFLICHT-ATTRIBUTE ===
-	@Column(nullable = false)
-	private String title; // Name der Datenquelle
+    // === REQUIRED ATTRIBUTES ===
+    @Column(nullable = false)
+    private String title; // Data source name
 
-	@Column(length = 2000)
-	private String description; // Beschreibung
+    @Column(length = 2000)
+    private String description; // Detailed description
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private Category category; // Verwaltung, Wirtschaft, Wissenschaft, Zivilgesellschaft
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category; // Government, Business, Science, Civil Society
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private DataFormat dataFormat; // CSV, JSON, API, Database, etc.
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)  
+    private DataFormat dataFormat; // CSV, JSON, API, Database, etc.
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private AccessLevel accessLevel; // PUBLIC, RESTRICTED, PRIVATE
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AccessLevel accessLevel; // PUBLIC, RESTRICTED, PRIVATE
 
-	// === KONTAKT & ZUGANG ===
-	@Column(nullable = false)
-	private String contactEmail; // Ansprechpartner
+    // === CONTACT & ACCESS ===
+    @Column(nullable = false)
+    private String contactEmail; // Contact person
 
-	@Column
-	private String contactName; // Name des Ansprechpartners
+    @Column
+    private String contactName; // Contact person name
 
-	@Column
-	private String organization; // Organisation/Behörde
+    @Column
+    private String organization; // Organization/Authority
 
-	@Column
-	private String dataUrl; // URL zur Datenquelle oder API
+    @Column
+    private String dataUrl; // URL to data source or API
 
-	@Column
-	private String documentationUrl; // Link zur Dokumentation
+    @Column
+    private String documentationUrl; // Link to documentation
 
-	// === ZERTIFIKATE & SICHERHEIT ===
-	@Column(nullable = false)
-	private Boolean requiresCertificate = false; // Braucht Zertifikat für Zugang
-
-	@ElementCollection(targetClass = Certificate.CertificateType.class)
+    // === CERTIFICATES & SECURITY ===
+    @Column(nullable = false)
+    private Boolean requiresCertificate = false; // Requires certificate for access	@ElementCollection(targetClass = Certificate.CertificateType.class)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "datasource_required_certificates", joinColumns = @JoinColumn(name = "datasource_id"))
 	@Column(name = "certificate_type")
 	private List<Certificate.CertificateType> requiredCertificateTypes = new ArrayList<>();
 
 	@Column
-	private String certificateRequirements; // Beschreibung welche Zertifikate nötig sind
+	private String certificateRequirements; // Description of which certificates are required
 
 	@Enumerated(EnumType.STRING)
 	@Column
-	private DataSensitivity dataSensitivity; // Wie sensibel sind die Daten?
+	private DataSensitivity dataSensitivity; // Data sensitivity level
 
-	// Beziehungen zu Access Requests
+	// Relationships to Access Requests
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY)
 	private List<DataAccessRequest> accessRequests = new ArrayList<>();
 
-	// === METADATEN ===
+	// === METADATA ===
 	@Column
-	private LocalDateTime lastUpdated; // Letzte Aktualisierung
+	private LocalDateTime lastUpdated; // Last update timestamp
 
 	@Column
-	private LocalDateTime createdAt; // Erstellungsdatum
+	private LocalDateTime createdAt; // Creation timestamp
 
 	@Column
-	private String updateFrequency; // Wie oft wird aktualisiert (täglich, wöchentlich, etc.)
+	private String updateFrequency; // Update frequency (daily, weekly, etc.)
 
 	@Column
-	private String licenseType; // Lizenz (CC0, CC-BY, proprietary, etc.)
+	private String licenseType; // License type (CC0, CC-BY, proprietary, etc.)
 
 	@Column
-	private Long estimatedSize; // Geschätzte Größe in Bytes
+	private Long estimatedSize; // Estimated size in bytes
 
 	// === FLEXIBLE TAGS ===
 	@ElementCollection
@@ -99,7 +97,7 @@ public class Datasource {
 	@Column(name = "tag")
 	private List<String> tags = new ArrayList<>();
 
-	// === ZUSÄTZLICHE FREIE METADATEN ===
+	// === ADDITIONAL FREE METADATA ===
 	@ElementCollection
 	@CollectionTable(name = "datasource_metadata", joinColumns = @JoinColumn(name = "datasource_id"))
 	@MapKeyColumn(name = "metadata_key")
