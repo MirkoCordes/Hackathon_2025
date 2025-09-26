@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
+import 'package:flutter_frontend/feature/certificate/certificate_upload.widget.dart';
 import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.controller.dart';
 import 'package:flutter_frontend/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,7 +88,7 @@ class DatasetListIconButton extends ConsumerWidget {
     return IconButton(
       onPressed: () async {
         // TODO: request new certificate
-        await showConfirmationDialog(context);
+        await showConfirmationDialog(context, e);
         //await router.pushNamed('datasources', pathParameters: pathParams);
       },
       icon: const Icon(Icons.key),
@@ -95,7 +96,7 @@ class DatasetListIconButton extends ConsumerWidget {
     );
   }
 
-  Future<void> showConfirmationDialog(BuildContext context) async {
+  Future<void> showConfirmationDialog(BuildContext context, Dataset e) async {
     return showDialog<void>(
       context: context,
       // Der Builder erstellt das eigentliche Dialog-Widget
@@ -107,6 +108,10 @@ class DatasetListIconButton extends ConsumerWidget {
               const Text(
                 'Laden sie hier das benötigte Zertifikat hoch, um den Zugriff zu beantragen.',
               ),
+              CertificateWidget(
+                availableTypes: e.requiredCertificateTypes,
+                popOnSuccess: true,
+              ),
             ],
           ),
           actions: <Widget>[
@@ -115,16 +120,6 @@ class DatasetListIconButton extends ConsumerWidget {
               child: const Text('Abbrechen'),
               onPressed: () {
                 // Schließt den Dialog und gibt null zurück
-                Navigator.of(context).pop();
-              },
-            ),
-            // Button zum Bestätigen
-            TextButton(
-              child: const Text('Hinzufügen'),
-              onPressed: () {
-                // Führt eine Aktion aus und schließt dann
-
-                print('Zertifikat hinzugefügt');
                 Navigator.of(context).pop();
               },
             ),

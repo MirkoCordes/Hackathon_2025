@@ -12,8 +12,13 @@ class CertificateWidget extends ConsumerWidget {
   // Optionally pass a list of CertificateType that should be shown instead
   // of fetching available types from the backend.
   final List<CertificateType>? availableTypes;
+  final bool popOnSuccess;
 
-  const CertificateWidget({super.key, this.availableTypes});
+  const CertificateWidget({
+    super.key,
+    this.availableTypes,
+    this.popOnSuccess = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,6 +37,7 @@ class CertificateWidget extends ConsumerWidget {
             } catch (_) {}
           },
           availableTypes: availableTypes,
+          popOnSuccess: popOnSuccess,
         ),
       ],
     );
@@ -44,14 +50,20 @@ class CertificateWidget extends ConsumerWidget {
 class _CertificateUploadForm extends ConsumerStatefulWidget {
   final Future<void> Function() onUploaded;
   final List<CertificateType>? availableTypes;
+  final bool popOnSuccess;
 
-  const _CertificateUploadForm({required this.onUploaded, this.availableTypes});
+  const _CertificateUploadForm({
+    required this.onUploaded,
+    this.availableTypes,
+    this.popOnSuccess = false,
+  });
 
   @override
   _CertificateUploadFormState createState() => _CertificateUploadFormState();
 }
 
-class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> {
+class _CertificateUploadFormState
+    extends ConsumerState<_CertificateUploadForm> {
   CertificateType? _selectedType;
   String _description = '';
   DateTime? _validUntil;
@@ -133,6 +145,9 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Upload erfolgreich')));
+      if (popOnSuccess) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -154,7 +169,15 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
           DropdownButton<CertificateType>(
             value: _selectedType,
             hint: const Text('Typ auswählen'),
-            items: widget.availableTypes!.map((t) => DropdownMenuItem(value: t, child: Text(t.displayName))).toList(),
+            items:
+                widget.availableTypes!
+                    .map(
+                      (t) => DropdownMenuItem(
+                        value: t,
+                        child: Text(t.displayName),
+                      ),
+                    )
+                    .toList(),
             onChanged: (v) => setState(() => _selectedType = v),
           )
         else
@@ -166,7 +189,15 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
                     (types) => DropdownButton<CertificateType>(
                       value: _selectedType,
                       hint: const Text('Typ auswählen'),
-                      items: types.map((t) => DropdownMenuItem(value: t, child: Text(t.displayName))).toList(),
+                      items:
+                          types
+                              .map(
+                                (t) => DropdownMenuItem(
+                                  value: t,
+                                  child: Text(t.displayName),
+                                ),
+                              )
+                              .toList(),
                       onChanged: (v) => setState(() => _selectedType = v),
                     ),
                 loading: () => const CircularProgressIndicator(),
@@ -193,7 +224,10 @@ class _CertificateUploadFormState extends ConsumerState<_CertificateUploadForm> 
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: _submit,
-          child: _submitting ? const CircularProgressIndicator() : const Text('Hochladen'),
+          child:
+              _submitting
+                  ? const CircularProgressIndicator()
+                  : const Text('Hochladen'),
         ),
       ],
     );
