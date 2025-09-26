@@ -7,11 +7,13 @@ final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
+      name: 'initial',
       builder: (context, state) => LoginScreen(),
     ),
     GoRoute(
       path: '/catalog',
       builder: (context, state) => const AppScaffold(body: CatalogScreen()),
+      name: 'catalog',
     ),
   ],
 );
