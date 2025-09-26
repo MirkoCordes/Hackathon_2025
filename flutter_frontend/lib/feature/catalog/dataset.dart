@@ -87,6 +87,7 @@ class Dataset {
     required this.additionalMetadata,
   });
 
-  factory Dataset.fromJson(Map<String, dynamic> json) => _$DatasetFromJson(json);
+  factory Dataset.fromJson(Map<String, dynamic> json) =>
+      _$DatasetFromJson(json);
   Map<String, dynamic> toJson() => _$DatasetToJson(this);
 }

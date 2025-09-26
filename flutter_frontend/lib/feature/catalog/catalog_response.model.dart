@@ -11,6 +11,5 @@ class CatalogResponse {
 
   factory CatalogResponse.fromJson(Map<String, dynamic> json) =>
       _$CatalogResponseFromJson(json);
-
   Map<String, dynamic> toJson() => _$CatalogResponseToJson(this);
 }
