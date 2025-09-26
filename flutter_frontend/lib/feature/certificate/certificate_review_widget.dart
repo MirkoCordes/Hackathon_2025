@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_frontend/jwt.repository.dart';
 import 'package:flutter_frontend/feature/login/role.enum.dart';
+import 'package:go_router/go_router.dart';
 
 /// Minimal Riverpod-based widget that shows the review button when role != user.
 class CertificateReviewWidget extends ConsumerWidget {
@@ -15,7 +16,7 @@ class CertificateReviewWidget extends ConsumerWidget {
       data: (role) {
         if (role != null && role != Role.user) {
           return ElevatedButton(
-            onPressed: () => Navigator.of(context).pushNamed('/certificates/pending'),
+            onPressed: () => GoRouter.of(context).pushNamed('certificates_pending'),
             child: const Text('Zertifikatsanträge überprüfen'),
           );
         }
