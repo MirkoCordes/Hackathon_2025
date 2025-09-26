@@ -23,7 +23,8 @@ class CatalogRepository {
       // Login erfolgreich, der Server gibt die Benutzerdaten zurück
 
       // JSON-String in eine Dart-Map umwandeln
-      final Map<String, dynamic> jsonMap = json.decode(response.body);
+      final String utf8Decodes = utf8.decode(response.bodyBytes);
+      final Map<String, dynamic> jsonMap = json.decode(utf8Decodes);
 
       // Deserialisierung: JSON-Map in Ihr User-Modell umwandeln
       return CatalogResponse.fromJson(jsonMap);
