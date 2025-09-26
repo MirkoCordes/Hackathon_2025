@@ -53,6 +53,32 @@ class AppScaffold extends ConsumerWidget {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+        // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Image.asset('assets/images/LogoGroßTransparent2.png'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
       body: body,
     );
   }
