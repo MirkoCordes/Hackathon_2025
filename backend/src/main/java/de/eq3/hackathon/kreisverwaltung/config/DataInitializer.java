@@ -87,7 +87,7 @@ public class DataInitializer implements CommandLineRunner {
             umweltdaten.setLicenseType("Behördenlizenz");
             umweltdaten.setRequiresCertificate(true);
             umweltdaten.setDataSensitivity(Datasource.DataSensitivity.RESTRICTED);
-            umweltdaten.getRequiredCertificateTypes().addAll(List.of(
+            umweltdaten.setRequiredCertificateTypes(List.of(
                     Certificate.CertificateType.GOVERNMENT_ENVIRONMENT,
                     Certificate.CertificateType.RESEARCH_ENVIRONMENTAL));
             umweltdaten.setCertificateRequirements("Umwelt-Behördenzertifikat oder Umweltforschung erforderlich");
@@ -127,7 +127,7 @@ public class DataInitializer implements CommandLineRunner {
             gesundheitsdaten.setLicenseType("Medizinische Forschungslizenz");
             gesundheitsdaten.setRequiresCertificate(true);
             gesundheitsdaten.setDataSensitivity(Datasource.DataSensitivity.CLASSIFIED);
-            gesundheitsdaten.getRequiredCertificateTypes().addAll(List.of(
+            gesundheitsdaten.setRequiredCertificateTypes(List.of(
                     Certificate.CertificateType.GOVERNMENT_HEALTH,
                     Certificate.CertificateType.RESEARCH_HEALTH,
                     Certificate.CertificateType.PROFESSIONAL_DOCTOR));

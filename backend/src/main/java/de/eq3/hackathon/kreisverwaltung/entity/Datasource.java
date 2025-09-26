@@ -58,8 +58,10 @@ public class Datasource {
 
 	// === CERTIFICATES & SECURITY ===
 	@Column(nullable = false)
-	private Boolean requiresCertificate = false; // Requires certificate for access @ElementCollection(targetClass =
-													// Certificate.CertificateType.class)
+	private Boolean requiresCertificate = false; // Requires certificate for access
+
+	// Required certificate types - simple like tags!
+	@ElementCollection(targetClass = Certificate.CertificateType.class)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "datasource_required_certificates", joinColumns = @JoinColumn(name = "datasource_id"))
 	@Column(name = "certificate_type")
@@ -72,6 +74,7 @@ public class Datasource {
 	@Column
 	private DataSensitivity dataSensitivity; // Data sensitivity level
 
+	// === RELATIONSHIPS ===
 	// Relationships to Access Requests
 	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY)
 	private List<DataAccessRequest> accessRequests = new ArrayList<>();
