@@ -3,6 +3,8 @@ import 'package:flutter_frontend/feature/certificate/certificate_review_widget.d
 import 'package:flutter_frontend/feature/logout/logout.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_frontend/feature/user/user.controller.dart';
+import 'package:flutter_frontend/feature/user/user.entity.dart';
 
 class AppScaffold extends ConsumerWidget {
   final Widget body;
@@ -14,6 +16,8 @@ class AppScaffold extends ConsumerWidget {
     final LogoutController logoutController = ref.read(
       logoutControllerProvider.notifier,
     );
+
+    final AsyncValue<User> state = ref.watch(userControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,6 +72,23 @@ class AppScaffold extends ConsumerWidget {
         actions: [
           // Certificate review icon - navigates to /certificates/review using push so it can be popped/closed
           CertificateReviewWidget(),
+
+          // Welcome message left to the profile icon
+          state.when(
+            data: (displayUser) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Willkommen, ${displayUser.firstName}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, st) => Center(child: Text('Fehler: $e')),
+          ),
+
           // User profile icon - navigates to /user using push so it can be popped/closed
           IconButton(
             tooltip: 'Profil',
