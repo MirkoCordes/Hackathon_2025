@@ -29,21 +29,28 @@ class DatasourceDetailScreen extends ConsumerWidget {
                   // Allgemein (volle Breite)
                   _buildCard('Allgemein', [
                     _buildItem('ID', dataset.id.toString(), fullWidth: true),
+                    const SizedBox(height: 10),
                     _buildItem('Titel', dataset.title, fullWidth: true),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Beschreibung',
                       dataset.description,
                       fullWidth: true,
                     ),
+                    const SizedBox(height: 10),
                     _buildItem('Kategorie', dataset.category.name),
+                    const SizedBox(height: 10),
                     _buildItem('Datenformat', dataset.dataFormat.name),
+                    const SizedBox(height: 10),
                     _buildItem('Zugriffslevel', dataset.accessLevel.name),
                   ]),
 
                   // Kontakt (nebeneinander wenn möglich)
                   _buildCard('Kontakt', [
                     _buildItem('E-Mail', dataset.contactEmail ?? '-'),
+                    const SizedBox(height: 10),
                     _buildItem('Name', dataset.contactName ?? '-'),
+                    const SizedBox(height: 10),
                     _buildItem('Organisation', dataset.organization ?? '-'),
                   ], isWide: isWide),
 
@@ -53,10 +60,12 @@ class DatasourceDetailScreen extends ConsumerWidget {
                       'Benötigt Zertifikat',
                       dataset.requiresCertificate ? 'Ja' : 'Nein',
                     ),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Zertifikat Typen',
                       dataset.requiredCertificateTypes.join(', '),
                     ),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Zertifikat Anforderungen',
                       dataset.certificateRequirements ?? '-',
@@ -70,23 +79,31 @@ class DatasourceDetailScreen extends ConsumerWidget {
                       'Daten Sensitivität',
                       dataset.dataSensitivity.name,
                     ),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Zugriffsanfragen',
                       dataset.accessRequests.join(', '),
                       fullWidth: true,
                     ),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Letzte Aktualisierung',
                       dataset.lastUpdated.toString(),
                     ),
+                    const SizedBox(height: 10),
                     _buildItem('Erstellt am', dataset.createdAt.toString()),
+                    const SizedBox(height: 10),
                     _buildItem('Update-Frequenz', dataset.updateFrequency),
+                    const SizedBox(height: 10),
                     _buildItem('Lizenz', dataset.licenseType),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Geschätzte Größe',
                       dataset.estimatedSize?.toString() ?? '-',
                     ),
+                    const SizedBox(height: 10),
                     _buildItem('Tags', dataset.tags.join(','), fullWidth: true),
+                    const SizedBox(height: 10),
                     _buildItem(
                       'Zusätzliche Metadaten',
                       dataset.additionalMetadata.entries
