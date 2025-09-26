@@ -11,7 +11,7 @@ class CatalogScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // TODO: search bar
-          CatalogSearchScreen(),
+          CatalogSearchBar(),
           // TODO: list view of katalogs
           const Text('You have pushed the button this many times:'),
           //Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
