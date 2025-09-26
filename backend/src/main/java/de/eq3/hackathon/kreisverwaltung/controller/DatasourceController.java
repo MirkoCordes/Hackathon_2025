@@ -37,7 +37,8 @@ public class DatasourceController {
 	private final UserService userService;
 
 	@GetMapping
-	public ResponseEntity<Map<String,List<Datasource>>> getAllDatasources(
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Map<String, List<Datasource>>> getAllDatasources(
 			@RequestParam(required = false) String title,
 			@RequestParam(required = false) String description,
 			@RequestParam(required = false) Datasource.Category category,
@@ -76,21 +77,22 @@ public class DatasourceController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource> getDatasourceById(@PathVariable Long id) {
 		Optional<Datasource> datasource = datasourceService.getDatasourceById(id);
 		return datasource.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
-	@PreAuthorize("hasRole('DATA_PROVIDER') or hasRole('ADMIN')")
+	@PostMapping(consumes = "application/json", produces = "application/json")
+	@PreAuthorize("hasAnyRole('DATA_PROVIDER','ADMIN')")
 	public ResponseEntity<Datasource> createDatasource(@RequestBody Datasource datasource) {
 		Datasource saved = datasourceService.saveDatasource(datasource);
 		return ResponseEntity.ok(saved);
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('DATA_PROVIDER') or hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('DATA_PROVIDER','ADMIN')")
 	public ResponseEntity<Datasource> updateDatasource(@PathVariable Long id,
 			@RequestBody Datasource datasource) {
 		if (!datasourceService.getDatasourceById(id).isPresent()) {
@@ -114,16 +116,19 @@ public class DatasourceController {
 	}
 
 	@GetMapping("/categories")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource.Category[]> getCategories() {
 		return ResponseEntity.ok(Datasource.Category.values());
 	}
 
 	@GetMapping("/access-levels")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource.AccessLevel[]> getAccessLevels() {
 		return ResponseEntity.ok(Datasource.AccessLevel.values());
 	}
 
 	@GetMapping("/data-formats")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource.DataFormat[]> getDataFormats() {
 		return ResponseEntity.ok(Datasource.DataFormat.values());
 	}

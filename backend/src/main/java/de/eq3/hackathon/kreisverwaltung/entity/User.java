@@ -1,5 +1,6 @@
 package de.eq3.hackathon.kreisverwaltung.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -63,15 +64,15 @@ public class User implements UserDetails {
     private List<Certificate> certificates = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonManagedReference("user-accessrequests")
+    @JsonBackReference("user-accessrequests")
     private List<DataAccessRequest> accessRequests = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonManagedReference("user-datarequests")
+    @JsonBackReference("user-datarequests")
     private List<DataRequest> dataRequests = new ArrayList<>();
 
     @OneToMany(mappedBy = "responder", fetch = FetchType.LAZY)
-    @JsonManagedReference("user-dataresponses")
+    @JsonBackReference("user-dataresponses")
     private List<DataRequestResponse> dataResponses = new ArrayList<>();
 
     public enum Role {
