@@ -93,6 +93,12 @@ public class DatasourceController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource> getDatasourceById(@PathVariable Long id) {
 		Optional<Datasource> datasource = datasourceService.getDatasourceById(id);
+
+		if (datasource.isPresent()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User currentUser = userService.findByUsername(auth.getName()).orElse(null);
+			datasource.get().setHasAccess(currentUser.canAccessDatasource(datasource.get()));
+		}
 		return datasource.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
@@ -157,6 +163,11 @@ public class DatasourceController {
 		}
 
 		List<Datasource> accessible = datasourceService.getAccessibleDatasources(currentUser);
+
+		for (Datasource ds : accessible) {
+			ds.setHasAccess(true);
+		}
+
 		return ResponseEntity.ok(Map.of("datasources", accessible));
 	}
 
