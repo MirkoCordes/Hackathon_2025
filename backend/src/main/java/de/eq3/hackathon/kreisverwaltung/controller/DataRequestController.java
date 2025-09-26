@@ -36,7 +36,7 @@ public class DataRequestController {
     // === MARKETPLACE OVERVIEW ===
 
     @GetMapping
-    public ResponseEntity<List<DataRequest>> getMarketplace(
+    public ResponseEntity<Map<String,List<DataRequest>>> getMarketplace(
             @RequestParam(defaultValue = "OPEN") DataRequest.Status status,
             @RequestParam(required = false) Datasource.Category category,
             @RequestParam(required = false) String search) {
@@ -51,7 +51,7 @@ public class DataRequestController {
             requests = dataRequestRepository.findByStatusOrderByCreatedAtDesc(status);
         }
 
-        return ResponseEntity.ok(requests);
+        return ResponseEntity.ok(Map.of("requests", requests));
     }
 
     @GetMapping("/stats")
@@ -166,7 +166,7 @@ public class DataRequestController {
 
     @GetMapping("/my-requests")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<DataRequest>> getMyRequests() {
+    public ResponseEntity<Map<String,List<DataRequest>>> getMyRequests() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 
@@ -175,7 +175,7 @@ public class DataRequestController {
         }
 
         List<DataRequest> myRequests = dataRequestRepository.findByUserOrderByCreatedAtDesc(currentUser);
-        return ResponseEntity.ok(myRequests);
+        return ResponseEntity.ok(Map.of("requests", myRequests));
     }
 
     // === RESPONSES TO REQUESTS ===
