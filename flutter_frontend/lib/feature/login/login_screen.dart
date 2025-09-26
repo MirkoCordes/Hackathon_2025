@@ -1,6 +1,7 @@
 // login_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/login/login.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -17,6 +18,10 @@ class LoginScreen extends ConsumerWidget {
     // 2. Maximale Breite für die Login-Box definieren
     // Nimm 80% der Bildschirmbreite, aber nicht mehr als 450 Pixel.
     final boxWidth = screenWidth > 450 ? 450.0 : screenWidth * 0.8;
+
+    final LoginController controller = ref.read(
+      loginControllerProvider.notifier,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
@@ -74,8 +79,12 @@ class LoginScreen extends ConsumerWidget {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () => {},
-
+                      onPressed: () async {
+                        await controller.login(
+                          _usernameController.text,
+                          _passwordController.text,
+                        );
+                      },
                       child: const Text(
                         'Anmelden',
                         style: TextStyle(fontSize: 18),
