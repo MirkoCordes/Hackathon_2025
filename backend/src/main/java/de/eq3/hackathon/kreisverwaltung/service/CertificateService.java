@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +51,11 @@ public class CertificateService {
             String description, MultipartFile file,
             LocalDateTime validUntil) throws IOException {
 
-        // File validation
-        validateFile(file);
+        // Detect content type and validate the file
+        String detectedContentType = detectContentType(file);
+        validateFile(file, detectedContentType);
 
-        // Save file
+        // Save file (files are stored under uploadDir, default ./uploads/certificates/)
         String fileName = saveFile(file);
 
         // Create Certificate entity
@@ -61,7 +65,8 @@ public class CertificateService {
         certificate.setDescription(description);
         certificate.setFileName(file.getOriginalFilename());
         certificate.setFilePath(fileName);
-        certificate.setFileType(file.getContentType());
+    // Store the detected content type (more reliable than the client-provided header)
+    certificate.setFileType(detectedContentType);
         certificate.setFileSize(file.getSize());
         certificate.setValidUntil(validUntil);
         certificate.setUploadedAt(LocalDateTime.now());
@@ -99,7 +104,7 @@ public class CertificateService {
         }
     }
 
-    private void validateFile(MultipartFile file) {
+    private void validateFile(MultipartFile file, String detectedContentType) {
         if (file.isEmpty()) {
             throw new RuntimeException("File is empty");
         }
@@ -110,14 +115,58 @@ public class CertificateService {
             throw new RuntimeException("File size exceeds 10MB limit");
         }
 
-        // Allowed file types
+    // Use detected content type (provided by caller) or fall back to header
+    String contentType = detectedContentType != null ? detectedContentType : file.getContentType();
+
+    // Allowed file types (whitelist)
+    if (contentType == null || (
+        !contentType.equals("application/pdf") &&
+            !contentType.equals("application/x-pdf") &&
+            !contentType.startsWith("image/jpeg") &&
+            !contentType.startsWith("image/jpg") &&
+            !contentType.startsWith("image/png"))) {
+        throw new RuntimeException("Only PDF, JPEG and PNG files are allowed (detected: " + contentType + ")");
+    }
+    }
+
+    private String detectContentType(MultipartFile file) {
+        // 1) client provided
         String contentType = file.getContentType();
-        if (contentType == null ||
-                (!contentType.equals("application/pdf") &&
-                        !contentType.startsWith("image/jpeg") &&
-                        !contentType.startsWith("image/png"))) {
-            throw new RuntimeException("Only PDF, JPEG and PNG files are allowed");
+        if (contentType != null && !contentType.equals("application/octet-stream")) {
+            return contentType;
         }
+
+        // 2) try guessing from stream (reads a small portion)
+        try (InputStream is = file.getInputStream(); BufferedInputStream bis = new BufferedInputStream(is)) {
+            bis.mark(10 * 1024);
+            String guessed = URLConnection.guessContentTypeFromStream(bis);
+            if (guessed != null) {
+                return guessed;
+            }
+            bis.reset();
+        } catch (Exception e) {
+            // ignore and try next method
+        }
+
+        // 3) try probe content type by writing to a temp file
+        Path tempFile = null;
+        try {
+            String original = file.getOriginalFilename();
+            String suffix = original != null && original.contains(".") ? original.substring(original.lastIndexOf('.')) : null;
+            tempFile = Files.createTempFile("upload-probe-", suffix == null ? null : suffix);
+            file.transferTo(tempFile.toFile());
+            String probe = Files.probeContentType(tempFile);
+            if (probe != null) return probe;
+        } catch (Exception e) {
+            // ignore
+        } finally {
+            try {
+                if (tempFile != null) Files.deleteIfExists(tempFile);
+            } catch (Exception ignore) {}
+        }
+
+        // 4) fallback
+        return "application/octet-stream";
     }
 
     private String saveFile(MultipartFile file) throws IOException {
