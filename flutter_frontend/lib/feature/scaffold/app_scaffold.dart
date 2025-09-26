@@ -63,10 +63,11 @@ class AppScaffold extends ConsumerWidget {
               child: Image.asset('assets/images/LogoGroßTransparent2.png'),
             ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('Datenbedarf'),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                if(context.mounted){
+                  GoRouter.of(context).goNamed('datarequests');
+                }
               },
             ),
             ListTile(
