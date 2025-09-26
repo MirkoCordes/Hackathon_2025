@@ -1,5 +1,6 @@
 package de.eq3.hackathon.kreisverwaltung.config;
 
+import de.eq3.hackathon.kreisverwaltung.entity.Certificate;
 import de.eq3.hackathon.kreisverwaltung.entity.Datasource;
 import de.eq3.hackathon.kreisverwaltung.entity.User;
 import de.eq3.hackathon.kreisverwaltung.repository.DatasourceRepository;
@@ -64,6 +65,7 @@ public class DataInitializer implements CommandLineRunner {
             verkehrsdaten.setUpdateFrequency("Täglich");
             verkehrsdaten.setLicenseType("CC0 - Public Domain");
             verkehrsdaten.setRequiresCertificate(false);
+            verkehrsdaten.setDataSensitivity(Datasource.DataSensitivity.PUBLIC);
             verkehrsdaten.getTags().addAll(List.of("Verkehr", "Mobilität", "Ostfriesland", "Öffentlich"));
             verkehrsdaten.getAdditionalMetadata().put("Messstandorte", "15 Zählstellen");
             verkehrsdaten.getAdditionalMetadata().put("Zeitraum", "Seit 2020");
@@ -84,7 +86,11 @@ public class DataInitializer implements CommandLineRunner {
             umweltdaten.setUpdateFrequency("Stündlich");
             umweltdaten.setLicenseType("Behördenlizenz");
             umweltdaten.setRequiresCertificate(true);
-            umweltdaten.setCertificateRequirements("Forschungs- oder Behördenzertifikat erforderlich");
+            umweltdaten.setDataSensitivity(Datasource.DataSensitivity.RESTRICTED);
+            umweltdaten.getRequiredCertificateTypes().addAll(List.of(
+                    Certificate.CertificateType.GOVERNMENT_ENVIRONMENT,
+                    Certificate.CertificateType.RESEARCH_ENVIRONMENTAL));
+            umweltdaten.setCertificateRequirements("Umwelt-Behördenzertifikat oder Umweltforschung erforderlich");
             umweltdaten.getTags().addAll(List.of("Umwelt", "Grundwasser", "Nitrat", "Forschung", "Sensibel"));
             umweltdaten.getAdditionalMetadata().put("Messstellen", "45 Brunnen");
             umweltdaten.getAdditionalMetadata().put("Parameter", "pH, Nitrat, Schwermetalle, Pestizide");
@@ -103,10 +109,52 @@ public class DataInitializer implements CommandLineRunner {
             wirtschaftsdaten.setUpdateFrequency("Monatlich");
             wirtschaftsdaten.setLicenseType("CC-BY 4.0");
             wirtschaftsdaten.setRequiresCertificate(false);
+            wirtschaftsdaten.setDataSensitivity(Datasource.DataSensitivity.PUBLIC);
             wirtschaftsdaten.getTags().addAll(List.of("Tourismus", "Wirtschaft", "Statistik", "Wittmund"));
 
-            datasourceRepository.saveAll(List.of(verkehrsdaten, umweltdaten, wirtschaftsdaten));
-            System.out.println("✅ Default datasources created: 3 Beispiel-Datenquellen");
+            // Beispiel 4: Gesundheitsdaten (sehr sensibel)
+            Datasource gesundheitsdaten = new Datasource();
+            gesundheitsdaten.setTitle("Anonymisierte Krankenhausstatistik Emden");
+            gesundheitsdaten.setDescription(
+                    "Anonymisierte Daten zu Behandlungsfällen, Kapazitätsauslastung und epidemiologischen Trends im Klinikum Emden. Streng anonymisiert nach DSGVO.");
+            gesundheitsdaten.setCategory(Datasource.Category.GOVERNMENT);
+            gesundheitsdaten.setDataFormat(Datasource.DataFormat.JSON);
+            gesundheitsdaten.setAccessLevel(Datasource.AccessLevel.RESTRICTED);
+            gesundheitsdaten.setContactEmail("statistik@klinikum-emden.de");
+            gesundheitsdaten.setContactName("Prof. Dr. Hans Mueller");
+            gesundheitsdaten.setOrganization("Klinikum Emden");
+            gesundheitsdaten.setUpdateFrequency("Monatlich");
+            gesundheitsdaten.setLicenseType("Medizinische Forschungslizenz");
+            gesundheitsdaten.setRequiresCertificate(true);
+            gesundheitsdaten.setDataSensitivity(Datasource.DataSensitivity.CLASSIFIED);
+            gesundheitsdaten.getRequiredCertificateTypes().addAll(List.of(
+                    Certificate.CertificateType.GOVERNMENT_HEALTH,
+                    Certificate.CertificateType.RESEARCH_HEALTH,
+                    Certificate.CertificateType.PROFESSIONAL_DOCTOR));
+            gesundheitsdaten
+                    .setCertificateRequirements("Nur für Gesundheitsbehörden, medizinische Forschung oder Ärzte");
+            gesundheitsdaten.getTags().addAll(List.of("Gesundheit", "Epidemiologie", "Anonymisiert", "Forschung"));
+
+            // Beispiel 5: NGO-Transparenzdaten
+            Datasource transparenzdaten = new Datasource();
+            transparenzdaten.setTitle("Lobbyisten-Register Ostfriesland");
+            transparenzdaten.setDescription(
+                    "Öffentliches Register aller registrierten Lobbyisten und deren Aktivitäten in den Landkreisen Ostfrieslands. Für Transparenz in der Politik.");
+            transparenzdaten.setCategory(Datasource.Category.CIVIL_SOCIETY);
+            transparenzdaten.setDataFormat(Datasource.DataFormat.CSV);
+            transparenzdaten.setAccessLevel(Datasource.AccessLevel.PUBLIC);
+            transparenzdaten.setContactEmail("info@transparenz-ostfriesland.de");
+            transparenzdaten.setContactName("Bürgerinitiative Transparenz");
+            transparenzdaten.setOrganization("Transparenz Ostfriesland e.V.");
+            transparenzdaten.setUpdateFrequency("Wöchentlich");
+            transparenzdaten.setLicenseType("CC-BY 4.0");
+            transparenzdaten.setRequiresCertificate(false);
+            transparenzdaten.setDataSensitivity(Datasource.DataSensitivity.PUBLIC);
+            transparenzdaten.getTags().addAll(List.of("Transparenz", "Politik", "Lobbyismus", "Bürgerbeteiligung"));
+
+            datasourceRepository
+                    .saveAll(List.of(verkehrsdaten, umweltdaten, wirtschaftsdaten, gesundheitsdaten, transparenzdaten));
+            System.out.println("✅ Default datasources created: 5 realistische Beispiel-Datenquellen");
         }
     }
 }

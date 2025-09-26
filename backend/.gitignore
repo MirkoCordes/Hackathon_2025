@@ -37,3 +37,6 @@ build/
 *.db
 *.mv.db
 *.trace.db
+
+### Upload Files ###
+/uploads/

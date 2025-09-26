@@ -60,8 +60,22 @@ public class Datasource {
 	@Column(nullable = false)
 	private Boolean requiresCertificate = false; // Braucht Zertifikat für Zugang
 
+	@ElementCollection(targetClass = Certificate.CertificateType.class)
+	@Enumerated(EnumType.STRING)
+	@CollectionTable(name = "datasource_required_certificates", joinColumns = @JoinColumn(name = "datasource_id"))
+	@Column(name = "certificate_type")
+	private List<Certificate.CertificateType> requiredCertificateTypes = new ArrayList<>();
+
 	@Column
-	private String certificateRequirements; // Welche Art von Zertifikat
+	private String certificateRequirements; // Beschreibung welche Zertifikate nötig sind
+
+	@Enumerated(EnumType.STRING)
+	@Column
+	private DataSensitivity dataSensitivity; // Wie sensibel sind die Daten?
+
+	// Beziehungen zu Access Requests
+	@OneToMany(mappedBy = "datasource", fetch = FetchType.LAZY)
+	private List<DataAccessRequest> accessRequests = new ArrayList<>();
 
 	// === METADATEN ===
 	@Column
@@ -148,6 +162,30 @@ public class Datasource {
 
 		public String getDisplayName() {
 			return displayName;
+		}
+	}
+
+	public enum DataSensitivity {
+		PUBLIC("Öffentlich", "Keine besonderen Zugangsbeschränkungen"),
+		INTERNAL("Intern", "Nur für interne Zwecke, einfache Registrierung"),
+		CONFIDENTIAL("Vertraulich", "Professioneller Nachweis erforderlich"),
+		RESTRICTED("Beschränkt", "Behördliche/Forschungs-Zertifikate erforderlich"),
+		CLASSIFIED("Geheim", "Höchste Sicherheitsstufe, spezielle Berechtigung");
+
+		private final String displayName;
+		private final String description;
+
+		DataSensitivity(String displayName, String description) {
+			this.displayName = displayName;
+			this.description = description;
+		}
+
+		public String getDisplayName() {
+			return displayName;
+		}
+
+		public String getDescription() {
+			return description;
 		}
 	}
 
