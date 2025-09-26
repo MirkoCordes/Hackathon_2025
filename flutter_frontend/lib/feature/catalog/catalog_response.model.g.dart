@@ -8,11 +8,11 @@ part of 'catalog_response.model.dart';
 
 CatalogResponse _$CatalogResponseFromJson(Map<String, dynamic> json) =>
     CatalogResponse(
-      datasets:
-          (json['datasets'] as List<dynamic>)
+      datasources:
+          (json['datasources'] as List<dynamic>)
               .map((e) => Dataset.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
 
 Map<String, dynamic> _$CatalogResponseToJson(CatalogResponse instance) =>
-    <String, dynamic>{'datasets': instance.datasets};
+    <String, dynamic>{'datasources': instance.datasources};

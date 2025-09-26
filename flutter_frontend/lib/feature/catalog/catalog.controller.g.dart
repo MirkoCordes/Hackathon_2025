@@ -6,7 +6,7 @@ part of 'catalog.controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$catalogControllerHash() => r'a50285f8a2e86d627e8b335403d1b027b16c5348';
+String _$catalogControllerHash() => r'87d7f5dddb27ea32a18aa73b95a0b530cbc2b4d1';
 
 /// See also [CatalogController].
 @ProviderFor(CatalogController)

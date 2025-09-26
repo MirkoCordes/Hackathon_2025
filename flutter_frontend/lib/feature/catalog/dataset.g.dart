@@ -10,9 +10,21 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   id: (json['id'] as num).toInt(),
   title: json['title'] as String,
   description: json['description'] as String,
-  category: $enumDecode(_$CategoryEnumMap, json['category']),
-  dataFormat: $enumDecode(_$DataFormatEnumMap, json['dataFormat']),
-  accessLevel: $enumDecode(_$AccessLevelEnumMap, json['accessLevel']),
+  category: $enumDecode(
+    _$CategoryEnumMap,
+    json['category'],
+    unknownValue: Category.unknown,
+  ),
+  dataFormat: $enumDecode(
+    _$DataFormatEnumMap,
+    json['dataFormat'],
+    unknownValue: DataFormat.unknown,
+  ),
+  accessLevel: $enumDecode(
+    _$AccessLevelEnumMap,
+    json['accessLevel'],
+    unknownValue: AccessLevel.unknown,
+  ),
   contactEmail: json['contactEmail'] as String?,
   contactName: json['contactName'] as String?,
   organization: json['organization'] as String?,
@@ -27,12 +39,17 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   dataSensitivity: $enumDecode(
     _$DataSensitivityEnumMap,
     json['dataSensitivity'],
+    unknownValue: DataSensitivity.unknown,
   ),
   accessRequests: json['accessRequests'] as List<dynamic>,
   lastUpdated: DateTime.parse(json['lastUpdated'] as String),
   createdAt: DateTime.parse(json['createdAt'] as String),
   updateFrequency: json['updateFrequency'] as String,
-  licenseType: $enumDecode(_$LicenseTypeEnumMap, json['licenseType']),
+  licenseType: $enumDecode(
+    _$LicenseTypeEnumMap,
+    json['licenseType'],
+    unknownValue: LicenseType.unknown,
+  ),
   estimatedSize: (json['estimatedSize'] as num?)?.toInt(),
   tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
   additionalMetadata: Map<String, String>.from(
@@ -66,14 +83,29 @@ Map<String, dynamic> _$DatasetToJson(Dataset instance) => <String, dynamic>{
   'additionalMetadata': instance.additionalMetadata,
 };
 
-const _$CategoryEnumMap = {Category.government: 'GOVERNMENT'};
+const _$CategoryEnumMap = {
+  Category.government: 'GOVERNMENT',
+  Category.unknown: 'unknown',
+};
 
-const _$DataFormatEnumMap = {DataFormat.csv: 'CSV'};
+const _$DataFormatEnumMap = {
+  DataFormat.csv: 'CSV',
+  DataFormat.json: 'JSON',
+  DataFormat.unknown: 'unknown',
+};
 
-const _$AccessLevelEnumMap = {AccessLevel.public: 'PUBLIC'};
+const _$AccessLevelEnumMap = {
+  AccessLevel.public: 'PUBLIC',
+  AccessLevel.unknown: 'unknown',
+};
 
-const _$DataSensitivityEnumMap = {DataSensitivity.public: 'PUBLIC'};
+const _$DataSensitivityEnumMap = {
+  DataSensitivity.public: 'PUBLIC',
+  DataSensitivity.unknown: 'unknown',
+};
 
 const _$LicenseTypeEnumMap = {
   LicenseType.cc0PublicDomain: 'CC0 - Public Domain',
+  LicenseType.ccBy4: 'CC-BY 4.0',
+  LicenseType.unknown: 'unknown',
 };

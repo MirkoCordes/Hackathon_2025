@@ -5,12 +5,11 @@ part 'catalog_response.model.g.dart';
 
 @JsonSerializable()
 class CatalogResponse {
-  final List<Dataset> datasets;
+  final List<Dataset> datasources;
 
-  CatalogResponse({required this.datasets});
+  CatalogResponse({required this.datasources});
 
   factory CatalogResponse.fromJson(Map<String, dynamic> json) =>
       _$CatalogResponseFromJson(json);
-
   Map<String, dynamic> toJson() => _$CatalogResponseToJson(this);
 }
