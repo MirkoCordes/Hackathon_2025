@@ -74,6 +74,7 @@ class CertificateRepository {
 
     final streamed = await request.send();
     final resp = await http.Response.fromStream(streamed);
+    debugPrint('Upload response: ${resp.statusCode} ${resp.body}');
     if (resp.statusCode != 200) {
       throw Exception('upload failed: ${resp.statusCode} ${resp.body}');
     }
