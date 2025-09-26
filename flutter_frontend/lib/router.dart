@@ -2,6 +2,7 @@ import 'package:flutter_frontend/feature/catalog/catalog_screen.dart';
 import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.screen.dart';
 import 'package:flutter_frontend/feature/login/login_screen.dart';
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
+import 'package:flutter_frontend/feature/user/user_profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -22,6 +23,11 @@ final GoRouter router = GoRouter(
         final id = state.pathParameters['id']!;
         return DatasourceDetailScreen(datasourceId: id);
       },
+    ),
+    GoRoute(
+      path: '/user',
+      name: 'user',
+      builder: (context, state) => const AppScaffold(body: UserProfilePage()),
     ),
   ],
 );
