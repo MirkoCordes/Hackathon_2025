@@ -16,17 +16,17 @@ class CatalogRepository {
     final Map<String, dynamic> queryParameter = {'title': query};
 
     final response = await http.get(
-      Uri.http('www.myurl.com', '/api/v1/test', queryParameter),
+      Uri.http('localhost:8080', '/api/datasources', queryParameter),
       headers: header,
     );
     if (response.statusCode == 200) {
       // Login erfolgreich, der Server gibt die Benutzerdaten zurück
 
       // JSON-String in eine Dart-Map umwandeln
-      final List<String> responseList = json.decode(response.body);
+      final Map<String, dynamic> jsonMap = json.decode(response.body);
 
       // Deserialisierung: JSON-Map in Ihr User-Modell umwandeln
-      return CatalogResponse.fromJson(responseList);
+      return CatalogResponse.fromJson(jsonMap);
     } else if (response.statusCode == 403) {
       // 401: Unauthorized (typisch für ungültige Anmeldedaten)
       throw Exception('Ungültiger Token.');

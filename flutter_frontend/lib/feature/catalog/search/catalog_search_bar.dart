@@ -11,6 +11,9 @@ class CatalogSearchBar extends ConsumerWidget {
       catalogControllerProvider.notifier,
     );
     //final CatalogState state = ref.watch(catalogControllerProvider);
-    return SearchBar(onChanged: (value) async => controller.search(value));
+    return SearchBar(
+      hintText: 'Datensatz durchsuchen ...',
+      onChanged: (value) async => controller.search(value),
+    );
   }
 }

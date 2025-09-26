@@ -16,13 +16,14 @@ class CatalogScreen extends ConsumerWidget {
     final CatalogState state = ref.watch(catalogControllerProvider);
     final List<Dataset> datasets = state.datasets;
     final Iterable<DataRow> dataRows = datasets.map((e) {
+      Map<String, String> pathParams = {'id': e.id.toString()};
       final List<DataCell> datacells = [
         DataCell(Text(e.title)),
         DataCell(Text(e.description)),
         DataCell(
           IconButton(
             onPressed: () async {
-              await router.pushNamed('datasources/${e.id}');
+              await router.pushNamed('datasources', pathParameters: pathParams);
             },
             icon: Icon(Icons.edit, color: Colors.black),
           ),

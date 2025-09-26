@@ -17,6 +17,6 @@ class CatalogController extends _$CatalogController {
   Future<void> search(String query) async {
     final CatalogRepository catalogRepository = CatalogRepository();
     final CatalogResponse response = await catalogRepository.getCatalogs(query);
-    state = CatalogState(searchQuery: query, datasets: response.datasets);
+    state = CatalogState(searchQuery: query, datasets: response.datasources);
   }
 }
