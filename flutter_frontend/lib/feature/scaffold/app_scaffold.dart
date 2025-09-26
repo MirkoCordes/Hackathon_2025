@@ -123,7 +123,7 @@ class AppScaffold extends ConsumerWidget {
               title: const Text('Katalog'),
               onTap: () {
                 if(context.mounted){
-                    GoRouter.of(context).go('/catalog');
+                    GoRouter.of(context).goNamed('catalog');
                   }
               },
             ),
