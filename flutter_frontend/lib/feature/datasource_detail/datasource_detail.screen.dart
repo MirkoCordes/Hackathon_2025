@@ -81,7 +81,7 @@ class DatasourceDetailScreen extends ConsumerWidget {
                     ),
                     _buildItem('Erstellt am', dataset.createdAt.toString()),
                     _buildItem('Update-Frequenz', dataset.updateFrequency),
-                    _buildItem('Lizenz', dataset.licenseType.name),
+                    _buildItem('Lizenz', dataset.licenseType),
                     _buildItem(
                       'Geschätzte Größe',
                       dataset.estimatedSize?.toString() ?? '-',

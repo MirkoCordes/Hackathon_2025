@@ -11,21 +11,9 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   title: json['title'] as String,
   hasAccess: json['hasAccess'] as bool,
   description: json['description'] as String,
-  category: $enumDecode(
-    _$CategoryEnumMap,
-    json['category'],
-    unknownValue: Category.unknown,
-  ),
-  dataFormat: $enumDecode(
-    _$DataFormatEnumMap,
-    json['dataFormat'],
-    unknownValue: DataFormat.unknown,
-  ),
-  accessLevel: $enumDecode(
-    _$AccessLevelEnumMap,
-    json['accessLevel'],
-    unknownValue: AccessLevel.unknown,
-  ),
+  category: $enumDecode(_$CategoryEnumMap, json['category']),
+  dataFormat: $enumDecode(_$DataFormatEnumMap, json['dataFormat']),
+  accessLevel: $enumDecode(_$AccessLevelEnumMap, json['accessLevel']),
   contactEmail: json['contactEmail'] as String?,
   contactName: json['contactName'] as String?,
   organization: json['organization'] as String?,
@@ -40,17 +28,12 @@ Dataset _$DatasetFromJson(Map<String, dynamic> json) => Dataset(
   dataSensitivity: $enumDecode(
     _$DataSensitivityEnumMap,
     json['dataSensitivity'],
-    unknownValue: DataSensitivity.unknown,
   ),
   accessRequests: json['accessRequests'] as List<dynamic>,
   lastUpdated: DateTime.parse(json['lastUpdated'] as String),
   createdAt: DateTime.parse(json['createdAt'] as String),
   updateFrequency: json['updateFrequency'] as String,
-  licenseType: $enumDecode(
-    _$LicenseTypeEnumMap,
-    json['licenseType'],
-    unknownValue: LicenseType.unknown,
-  ),
+  licenseType: json['licenseType'] as String,
   estimatedSize: (json['estimatedSize'] as num?)?.toInt(),
   tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
   additionalMetadata: Map<String, String>.from(
@@ -79,7 +62,7 @@ Map<String, dynamic> _$DatasetToJson(Dataset instance) => <String, dynamic>{
   'lastUpdated': instance.lastUpdated.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updateFrequency': instance.updateFrequency,
-  'licenseType': _$LicenseTypeEnumMap[instance.licenseType]!,
+  'licenseType': instance.licenseType,
   'estimatedSize': instance.estimatedSize,
   'tags': instance.tags,
   'additionalMetadata': instance.additionalMetadata,
@@ -87,27 +70,36 @@ Map<String, dynamic> _$DatasetToJson(Dataset instance) => <String, dynamic>{
 
 const _$CategoryEnumMap = {
   Category.government: 'GOVERNMENT',
-  Category.unknown: 'unknown',
+  Category.business: 'BUSINESS',
+  Category.science: 'SCIENCE',
+  Category.civilSociety: 'CIVIL_SOCIETY',
 };
 
 const _$DataFormatEnumMap = {
   DataFormat.csv: 'CSV',
   DataFormat.json: 'JSON',
-  DataFormat.unknown: 'unknown',
+  DataFormat.xml: 'XML',
+  DataFormat.restApi: 'REST_API',
+  DataFormat.soapApi: 'SOAP_API',
+  DataFormat.database: 'DATABASE',
+  DataFormat.excel: 'EXCEL',
+  DataFormat.pdf: 'PDF',
+  DataFormat.shapefile: 'SHAPEFILE',
+  DataFormat.wms: 'WMS',
+  DataFormat.wfs: 'WFS',
+  DataFormat.other: 'OTHER',
 };
 
 const _$AccessLevelEnumMap = {
   AccessLevel.public: 'PUBLIC',
-  AccessLevel.unknown: 'unknown',
+  AccessLevel.restricted: 'RESTRICTED',
+  AccessLevel.privateLevel: 'PRIVATE',
 };
 
 const _$DataSensitivityEnumMap = {
   DataSensitivity.public: 'PUBLIC',
-  DataSensitivity.unknown: 'unknown',
-};
-
-const _$LicenseTypeEnumMap = {
-  LicenseType.cc0PublicDomain: 'CC0 - Public Domain',
-  LicenseType.ccBy4: 'CC-BY 4.0',
-  LicenseType.unknown: 'unknown',
+  DataSensitivity.internal: 'INTERNAL',
+  DataSensitivity.confidential: 'CONFIDENTIAL',
+  DataSensitivity.restricted: 'RESTRICTED',
+  DataSensitivity.classified: 'CLASSIFIED',
 };

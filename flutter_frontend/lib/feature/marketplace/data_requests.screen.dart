@@ -36,22 +36,40 @@ class DataRequestsScreen extends ConsumerWidget {
                 ),
                 subtitle: Row(
                   children: [
-                    Chip(
-                      label: Text(request.category),
-                      backgroundColor: Colors.blue.shade50,
-                      side: BorderSide.none,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Kategorie', style: TextStyle(fontSize: 10)),
+                        Chip(
+                          label: Text(request.category),
+                          backgroundColor: Colors.blue.shade50,
+                          side: BorderSide.none,
+                        ),
+                      ],
                     ),
                     const SizedBox(width: 6),
-                    Chip(
-                      label: Text(request.priority),
-                      backgroundColor: Colors.orange.shade50,
-                      side: BorderSide.none,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Priorität', style: TextStyle(fontSize: 10)),
+                        Chip(
+                          label: Text(request.priority),
+                          backgroundColor: Colors.orange.shade50,
+                          side: BorderSide.none,
+                        ),
+                      ],
                     ),
                     const SizedBox(width: 6),
-                    Chip(
-                      label: Text(request.status),
-                      backgroundColor: Colors.green.shade50,
-                      side: BorderSide.none,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Status', style: TextStyle(fontSize: 10)),
+                        Chip(
+                          label: Text(request.status),
+                          backgroundColor: Colors.green.shade50,
+                          side: BorderSide.none,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -73,6 +91,18 @@ class DataRequestsScreen extends ConsumerWidget {
                     _buildDetail('Schließgrund', request.closedReason!),
                   _buildDetail('Antworten', request.responseCount.toString()),
                   _buildDetail('Alter', request.formattedAge),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.reply),
+                      label: const Text('Antworten'),
+                      onPressed: () {
+                        // Hier deine Logik zum Beantworten der Anfrage
+                        debugPrint('Antwort auf Anfrage ${request.id}');
+                      },
+                    ),
+                  ),
                 ],
               ),
             );

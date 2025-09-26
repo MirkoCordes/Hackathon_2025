@@ -9,7 +9,12 @@ part 'dataset.g.dart';
 enum Category {
   @JsonValue('GOVERNMENT')
   government,
-  unknown,
+  @JsonValue('BUSINESS')
+  business,
+  @JsonValue('SCIENCE')
+  science,
+  @JsonValue('CIVIL_SOCIETY')
+  civilSociety,
 }
 
 @JsonEnum()
@@ -18,30 +23,50 @@ enum DataFormat {
   csv,
   @JsonValue('JSON')
   json,
-  unknown,
+  @JsonValue('XML')
+  xml,
+  @JsonValue('REST_API')
+  restApi,
+  @JsonValue('SOAP_API')
+  soapApi,
+  @JsonValue('DATABASE')
+  database,
+  @JsonValue('EXCEL')
+  excel,
+  @JsonValue('PDF')
+  pdf,
+  @JsonValue('SHAPEFILE')
+  shapefile,
+  @JsonValue('WMS')
+  wms,
+  @JsonValue('WFS')
+  wfs,
+  @JsonValue('OTHER')
+  other,
 }
 
 @JsonEnum()
 enum AccessLevel {
   @JsonValue('PUBLIC')
   public,
-  unknown,
+  @JsonValue('RESTRICTED')
+  restricted,
+  @JsonValue('PRIVATE')
+  privateLevel,
 }
 
 @JsonEnum()
 enum DataSensitivity {
   @JsonValue('PUBLIC')
   public,
-  unknown,
-}
-
-@JsonEnum()
-enum LicenseType {
-  @JsonValue('CC0 - Public Domain')
-  cc0PublicDomain,
-  @JsonValue('CC-BY 4.0')
-  ccBy4,
-  unknown,
+  @JsonValue('INTERNAL')
+  internal,
+  @JsonValue('CONFIDENTIAL')
+  confidential,
+  @JsonValue('RESTRICTED')
+  restricted,
+  @JsonValue('CLASSIFIED')
+  classified,
 }
 
 @JsonSerializable()
@@ -50,11 +75,8 @@ class Dataset {
   final bool hasAccess;
   final String title;
   final String description;
-  @JsonKey(unknownEnumValue: Category.unknown)
   final Category category;
-  @JsonKey(unknownEnumValue: DataFormat.unknown)
   final DataFormat dataFormat;
-  @JsonKey(unknownEnumValue: AccessLevel.unknown)
   final AccessLevel accessLevel;
   final String? contactEmail;
   final String? contactName;
@@ -64,14 +86,12 @@ class Dataset {
   final bool requiresCertificate;
   final List<CertificateType> requiredCertificateTypes;
   final String? certificateRequirements;
-  @JsonKey(unknownEnumValue: DataSensitivity.unknown)
   final DataSensitivity dataSensitivity;
   final List<dynamic> accessRequests;
   final DateTime lastUpdated;
   final DateTime createdAt;
   final String updateFrequency;
-  @JsonKey(unknownEnumValue: LicenseType.unknown)
-  final LicenseType licenseType;
+  final String licenseType;
   final int? estimatedSize;
   final List<String> tags;
   final Map<String, String> additionalMetadata;
@@ -103,7 +123,6 @@ class Dataset {
     required this.additionalMetadata,
   });
 
-  factory Dataset.fromJson(Map<String, dynamic> json) =>
-      _$DatasetFromJson(json);
+  factory Dataset.fromJson(Map<String, dynamic> json) => _$DatasetFromJson(json);
   Map<String, dynamic> toJson() => _$DatasetToJson(this);
 }
