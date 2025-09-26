@@ -4,6 +4,7 @@ import 'package:flutter_frontend/feature/login/login_screen.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.screen.dart';
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
 import 'package:flutter_frontend/feature/user/user_profile_page.dart';
+import 'package:flutter_frontend/feature/certificate/certificate_pending_page.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -32,10 +33,14 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const AppScaffold(body: UserProfilePage()),
     ),
     GoRoute(
+      path: '/certificates/pending',
+      name: 'certificates_pending',
+      builder: (context, state) => AppScaffold(body: CertificatePendingPage()),
+    ),
+    GoRoute(
       path: '/datarequests',
       name: 'datarequests',
-      builder:
-          (context, state) => const AppScaffold(body: DataRequestsScreen()),
+      builder: (context, state) => const AppScaffold(body: DataRequestsScreen()),
     ),
   ],
 );

@@ -9,6 +9,7 @@ class Certificate {
   final String description;
   final CertificateType type;
   final CertificateStatus status;
+  @JsonKey(name: 'fileName')
   final String? filename;
   final String? filePath;
   final String? reviewNotes;
