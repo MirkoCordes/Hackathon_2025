@@ -21,7 +21,9 @@ final GoRouter router = GoRouter(
       path: '/datasources/:id',
       builder: (context, state) {
         final id = state.pathParameters['id']!;
-        return DatasourceDetailScreen(datasourceId: id);
+        return AppScaffold(
+          body: DatasourceDetailScreen(datasourceId: id),
+        );
       },
     ),
     GoRoute(
