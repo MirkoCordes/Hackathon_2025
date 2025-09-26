@@ -553,6 +553,7 @@ public class DataInitializer implements CommandLineRunner {
         private void createDataRequests() {
                 if (dataAccessRequestRepository.count() > 0) {
                         // We already seed access requests which are related; avoid duplicating
+                        return;
                 }
 
                 // Find some example users
