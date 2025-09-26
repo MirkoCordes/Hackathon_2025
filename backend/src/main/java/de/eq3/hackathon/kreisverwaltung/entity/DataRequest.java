@@ -1,6 +1,7 @@
 package de.eq3.hackathon.kreisverwaltung.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,8 +47,13 @@ public class DataRequest {
     // === REQUESTER INFO ===
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference("user-datarequests")
+    @JsonIgnore
     private User user; // Wer hat den Datenwunsch gestellt?
+
+    @JsonProperty("userId")
+    public Long getUserId() {
+        return this.user != null ? this.user.getId() : null;
+    }
 
     @Column
     private String contactEmail; // Kontakt-Email (falls anders als User-Email)
@@ -73,8 +79,15 @@ public class DataRequest {
 
     // === RESPONSES ===
     @OneToMany(mappedBy = "dataRequest", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference("datarequest-responses")
+    @JsonIgnore
     private List<DataRequestResponse> responses = new ArrayList<>();
+
+     @JsonProperty("responseIds")
+    public List<String> getResponses() {
+        return this.responses.stream()
+                .map(DataRequestResponse::getId).map(Object::toString)
+                .toList();
+    }
 
     // === METADATA ===
     @Column(nullable = false)
@@ -179,9 +192,10 @@ public class DataRequest {
         return responses.size();
     }
 
-    public List<DataRequestResponse> getActiveResponses() {
+    public List<String> getActiveResponseIds() {
         return responses.stream()
                 .filter(response -> response.getStatus() != DataRequestResponse.Status.WITHDRAWN)
+                .map(DataRequestResponse::getId).map(Object::toString)
                 .toList();
     }
 
