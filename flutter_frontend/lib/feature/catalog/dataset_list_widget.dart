@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/router.dart';
+import 'package:go_router/go_router.dart';
 
 class DatasetListWidget extends StatelessWidget {
   const DatasetListWidget({super.key, required this.datasets});
@@ -10,6 +11,7 @@ class DatasetListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: datasets.length,
       // Fügen Sie horizontalen Padding zur Liste hinzu, um sie schmaler zu machen
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -40,8 +42,8 @@ class DatasetListWidget extends StatelessWidget {
             // 5. Der Navigations-Button (Pfeil)
             trailing: IconButton(
               onPressed: () async {
-                await router.pushNamed(
-                  'datasources',
+                await GoRouter.of(context).pushNamed(
+                  'catalogDatasourceDetail',
                   pathParameters: pathParams,
                 );
               },

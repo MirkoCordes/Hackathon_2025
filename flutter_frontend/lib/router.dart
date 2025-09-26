@@ -2,6 +2,7 @@ import 'package:flutter_frontend/feature/catalog/catalog_screen.dart';
 import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.screen.dart';
 import 'package:flutter_frontend/feature/login/login_screen.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.screen.dart';
+import 'package:flutter_frontend/feature/my_datasets/my_datasets.screen.dart';
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
 import 'package:flutter_frontend/feature/user/user_profile_page.dart';
 import 'package:flutter_frontend/feature/certificate/certificate_pending_page.dart';
@@ -40,7 +41,13 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/datarequests',
       name: 'datarequests',
-      builder: (context, state) => const AppScaffold(body: DataRequestsScreen()),
+      builder:
+          (context, state) => const AppScaffold(body: DataRequestsScreen()),
+    ),
+    GoRoute(
+      path: '/my-datasets',
+      name: 'my-datasets',
+      builder: (context, state) => const AppScaffold(body: MyDatasetsScreen()),
     ),
   ],
 );
