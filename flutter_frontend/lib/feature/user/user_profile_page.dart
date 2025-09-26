@@ -19,20 +19,22 @@ class UserProfilePage extends StatelessWidget {
     }
 
     // If no user provided, use a placeholder user for UI layout purposes
-    final displayUser = user ?? const User(
-      id: 0,
-      username: 'anonymous',
-      email: 'anonymous@example.com',
-      role: UserRole.user,
-      enabled: false,
-      firstName: null,
-      lastName: null,
-      organization: null,
-      jobTitle: null,
-      activeCertificatesCount: 0,
-      totalCertificatesCount: 0,
-      accessRequestsCount: 0,
-    );
+    final displayUser =
+        user ??
+        const User(
+          id: 0,
+          username: 'anonymous',
+          email: 'anonymous@example.com',
+          role: UserRole.user,
+          enabled: false,
+          firstName: null,
+          lastName: null,
+          organization: null,
+          jobTitle: null,
+          activeCertificatesCount: 0,
+          totalCertificatesCount: 0,
+          accessRequestsCount: 0,
+        );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
