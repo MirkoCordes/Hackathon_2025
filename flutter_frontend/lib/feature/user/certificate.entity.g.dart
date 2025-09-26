@@ -14,7 +14,7 @@ Certificate _$CertificateFromJson(Map<String, dynamic> json) => Certificate(
       json['status'] == null
           ? CertificateStatus.pending
           : CertificateStatus.fromJson(json['status'] as String),
-  filename: json['filename'] as String?,
+  filename: json['fileName'] as String?,
   filePath: json['filePath'] as String?,
   reviewNotes: json['reviewNotes'] as String?,
   validUntil:
@@ -35,7 +35,7 @@ Map<String, dynamic> _$CertificateToJson(Certificate instance) =>
       'description': instance.description,
       'type': instance.type,
       'status': instance.status,
-      'filename': instance.filename,
+      'fileName': instance.filename,
       'filePath': instance.filePath,
       'reviewNotes': instance.reviewNotes,
       'validUntil': instance.validUntil?.toIso8601String(),

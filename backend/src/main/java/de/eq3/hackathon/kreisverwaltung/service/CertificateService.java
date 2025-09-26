@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 @Service
 @RequiredArgsConstructor
@@ -51,19 +53,22 @@ public class CertificateService {
             String description, MultipartFile file,
             LocalDateTime validUntil) throws IOException {
 
-        // Detect content type and validate the file
-        String detectedContentType = detectContentType(file);
-        validateFile(file, detectedContentType);
+        // Read uploaded bytes into memory (files are limited to 10MB in validate)
+        byte[] bytes = file.getBytes();
+
+        // Detect content type from bytes and filename, then validate
+        String detectedContentType = detectContentType(bytes, file.getOriginalFilename(), file.getContentType());
+        validateFile(bytes, detectedContentType);
 
         // Save file (files are stored under uploadDir, default ./uploads/certificates/)
-        String fileName = saveFile(file);
+        String fileName = saveFileBytes(bytes, file.getOriginalFilename());
 
         // Create Certificate entity
         Certificate certificate = new Certificate();
         certificate.setUser(user);
         certificate.setType(type);
         certificate.setDescription(description);
-        certificate.setFileName(file.getOriginalFilename());
+    certificate.setFileName(file.getOriginalFilename());
         certificate.setFilePath(fileName);
     // Store the detected content type (more reliable than the client-provided header)
     certificate.setFileType(detectedContentType);
@@ -105,56 +110,48 @@ public class CertificateService {
     }
 
     private void validateFile(MultipartFile file, String detectedContentType) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("File is empty");
+        try {
+            byte[] bytes = file.getBytes();
+            validateFile(bytes, detectedContentType != null ? detectedContentType : file.getContentType());
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read uploaded file for validation: " + e.getMessage());
         }
-
-        // Size limit: 10MB
-        long maxSize = 10 * 1024 * 1024;
-        if (file.getSize() > maxSize) {
-            throw new RuntimeException("File size exceeds 10MB limit");
-        }
-
-    // Use detected content type (provided by caller) or fall back to header
-    String contentType = detectedContentType != null ? detectedContentType : file.getContentType();
-
-    // Allowed file types (whitelist)
-    if (contentType == null || (
-        !contentType.equals("application/pdf") &&
-            !contentType.equals("application/x-pdf") &&
-            !contentType.startsWith("image/jpeg") &&
-            !contentType.startsWith("image/jpg") &&
-            !contentType.startsWith("image/png"))) {
-        throw new RuntimeException("Only PDF, JPEG and PNG files are allowed (detected: " + contentType + ")");
-    }
     }
 
     private String detectContentType(MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            return detectContentType(bytes, file.getOriginalFilename(), file.getContentType());
+        } catch (Exception e) {
+            // fallback to original header or octet-stream
+            String ct = file.getContentType();
+            return ct != null ? ct : "application/octet-stream";
+        }
+    }
+
+    // New overload: detect content type from byte[] and filename/contentType hints
+    private String detectContentType(byte[] bytes, String originalFilename, String providedContentType) {
         // 1) client provided
-        String contentType = file.getContentType();
-        if (contentType != null && !contentType.equals("application/octet-stream")) {
-            return contentType;
+        if (providedContentType != null && !providedContentType.equals("application/octet-stream")) {
+            return providedContentType;
         }
 
-        // 2) try guessing from stream (reads a small portion)
-        try (InputStream is = file.getInputStream(); BufferedInputStream bis = new BufferedInputStream(is)) {
-            bis.mark(10 * 1024);
-            String guessed = URLConnection.guessContentTypeFromStream(bis);
+        // 2) try guessing from bytes (URLConnection.guessContentTypeFromStream expects an InputStream)
+        try (InputStream is = new BufferedInputStream(new java.io.ByteArrayInputStream(bytes))) {
+            String guessed = URLConnection.guessContentTypeFromStream(is);
             if (guessed != null) {
                 return guessed;
             }
-            bis.reset();
         } catch (Exception e) {
-            // ignore and try next method
+            // ignore
         }
 
-        // 3) try probe content type by writing to a temp file
+        // 3) try probe content type by writing to a temp file with the given suffix
         Path tempFile = null;
         try {
-            String original = file.getOriginalFilename();
-            String suffix = original != null && original.contains(".") ? original.substring(original.lastIndexOf('.')) : null;
+            String suffix = originalFilename != null && originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf('.')) : null;
             tempFile = Files.createTempFile("upload-probe-", suffix == null ? null : suffix);
-            file.transferTo(tempFile.toFile());
+            Files.write(tempFile, bytes);
             String probe = Files.probeContentType(tempFile);
             if (probe != null) return probe;
         } catch (Exception e) {
@@ -165,27 +162,59 @@ public class CertificateService {
             } catch (Exception ignore) {}
         }
 
-        // 4) fallback
+        // fallback
         return "application/octet-stream";
     }
 
-    private String saveFile(MultipartFile file) throws IOException {
+    private void validateFile(byte[] bytes, String detectedContentType) {
+        if (bytes == null || bytes.length == 0) {
+            throw new RuntimeException("File is empty");
+        }
+
+        long maxSize = 10 * 1024 * 1024;
+        if (bytes.length > maxSize) {
+            throw new RuntimeException("File size exceeds 10MB limit");
+        }
+
+        String contentType = detectedContentType;
+        if (contentType == null || (
+            !contentType.equals("application/pdf") &&
+                !contentType.equals("application/x-pdf") &&
+                !contentType.startsWith("image/jpeg") &&
+                !contentType.startsWith("image/jpg") &&
+                !contentType.startsWith("image/png"))) {
+            throw new RuntimeException("Only PDF, JPEG and PNG files are allowed (detected: " + contentType + ")");
+        }
+    }
+
+    private String saveFileBytes(byte[] bytes, String originalFilename) throws IOException {
         // Create upload directory if not exists
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        // Generate unique filename
-        String originalFilename = file.getOriginalFilename();
-        String extension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf("."))
-                : "";
+        String extension = originalFilename != null && originalFilename.contains(".") ? originalFilename.substring(originalFilename.lastIndexOf('.')) : "";
         String fileName = UUID.randomUUID().toString() + extension;
-
-        // Save file
         Path filePath = uploadPath.resolve(fileName);
-        Files.copy(file.getInputStream(), filePath);
-
+        Files.write(filePath, bytes);
         return fileName;
+    }
+
+    public Optional<Resource> getCertificateResource(Long certificateId) {
+        Optional<Certificate> certOpt = certificateRepository.findById(certificateId);
+        if (certOpt.isEmpty()) return Optional.empty();
+
+        Certificate cert = certOpt.get();
+        try {
+            Path filePath = Paths.get(uploadDir).resolve(cert.getFilePath());
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists() && resource.isReadable()) {
+                return Optional.of(resource);
+            }
+        } catch (Exception e) {
+            // ignore and return empty
+        }
+        return Optional.empty();
     }
 }
