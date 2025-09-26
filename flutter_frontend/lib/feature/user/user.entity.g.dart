@@ -19,6 +19,11 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   lastName: json['lastName'] as String?,
   organization: json['organization'] as String?,
   jobTitle: json['jobTitle'] as String?,
+  activeCertificatesCount:
+      (json['activeCertificatesCount'] as num?)?.toInt() ?? 0,
+  totalCertificatesCount:
+      (json['totalCertificatesCount'] as num?)?.toInt() ?? 0,
+  accessRequestsCount: (json['accessRequestsCount'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -31,4 +36,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'lastName': instance.lastName,
   'organization': instance.organization,
   'jobTitle': instance.jobTitle,
+  'activeCertificatesCount': instance.activeCertificatesCount,
+  'totalCertificatesCount': instance.totalCertificatesCount,
+  'accessRequestsCount': instance.accessRequestsCount,
 };
