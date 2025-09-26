@@ -180,10 +180,15 @@ public class DataRequestController {
 
     // === RESPONSES TO REQUESTS ===
 
+    /**
+     * Respond to a data request identified by path variable {@code requestId}.
+     * The request body should be a {@link de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto}
+     * containing the response details. Clients should NOT include a nested DataRequest in the body.
+     */
     @PostMapping("/requests/{requestId}/responses")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> respondToDataRequest(@PathVariable Long requestId,
-            @RequestBody DataRequestResponse response) {
+        @RequestBody de.eq3.hackathon.kreisverwaltung.dto.DataRequestResponseDto dto) {
         Optional<DataRequest> requestOpt = dataRequestRepository.findById(requestId);
         if (requestOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -207,23 +212,33 @@ public class DataRequestController {
             return ResponseEntity.badRequest().body("Sie können nicht auf Ihren eigenen Datenwunsch antworten");
         }
 
-        // Set metadata
+        // Map DTO -> Entity
+        DataRequestResponse response = new DataRequestResponse();
         response.setDataRequest(dataRequest);
         response.setResponder(currentUser);
+        response.setResponseType(dto.getResponseType());
+        response.setMessage(dto.getMessage());
         response.setCreatedAt(LocalDateTime.now());
         response.setLastUpdated(LocalDateTime.now());
+        response.setContactEmail(dto.getContactEmail());
+        response.setContactPhone(dto.getContactPhone());
 
-        // Validate existing datasource if referenced
-        if (response.getResponseType() == DataRequestResponse.ResponseType.EXISTING_DATASOURCE
-                && response.getExistingDatasource() != null) {
-
-            Optional<Datasource> datasourceOpt = datasourceService
-                    .getDatasourceById(response.getExistingDatasource().getId());
+        // Existing datasource reference
+        if (dto.getExistingDatasourceId() != null) {
+            Optional<Datasource> datasourceOpt = datasourceService.getDatasourceById(dto.getExistingDatasourceId());
             if (datasourceOpt.isEmpty()) {
                 return ResponseEntity.badRequest().body("Referenzierte Datenquelle nicht gefunden");
             }
             response.setExistingDatasource(datasourceOpt.get());
         }
+
+        // New datasource proposal
+        response.setProposedTitle(dto.getProposedTitle());
+        response.setProposedDescription(dto.getProposedDescription());
+        response.setEstimatedDeliveryTime(dto.getEstimatedDeliveryTime());
+        response.setEstimatedCost(dto.getEstimatedCost());
+        response.setProposedFormat(dto.getProposedFormat());
+        response.setProposedAccessLevel(dto.getProposedAccessLevel());
 
         DataRequestResponse saved = responseRepository.save(response);
         return ResponseEntity.ok(saved);
