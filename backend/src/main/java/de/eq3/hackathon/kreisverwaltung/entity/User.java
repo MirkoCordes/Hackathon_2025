@@ -20,8 +20,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = { "certificates", "accessRequests" })
-@ToString(exclude = { "certificates", "accessRequests" })
+@EqualsAndHashCode(exclude = { "certificates", "accessRequests", "dataRequests", "dataResponses" })
+@ToString(exclude = { "certificates", "accessRequests", "dataRequests", "dataResponses" })
 public class User implements UserDetails {
 
     @Id
@@ -63,6 +63,14 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference("user-accessrequests")
     private List<DataAccessRequest> accessRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference("user-datarequests")
+    private List<DataRequest> dataRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "responder", fetch = FetchType.LAZY)
+    @JsonManagedReference("user-dataresponses")
+    private List<DataRequestResponse> dataResponses = new ArrayList<>();
 
     public enum Role {
         USER("Nutzer"),
