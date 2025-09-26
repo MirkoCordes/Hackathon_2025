@@ -6,6 +6,8 @@ import de.eq3.hackathon.kreisverwaltung.repository.DatasourceRepository;
 import de.eq3.hackathon.kreisverwaltung.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -45,17 +47,66 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("✅ Default test user created: testuser / test123");
         }
 
-        // Create default datasource if not exists
+        // Create default datasources if none exist
         if (datasourceRepository.count() == 0) {
-            Datasource datasource = new Datasource();
-            // Keine ID setzen! @GeneratedValue macht das automatisch
-            datasource.getMetadata().put("name", "Beispiel Datenquelle");
-            datasource.getMetadata().put("category", "GOVERNMENT");
-            datasource.getMetadata().put("format", "CSV");
-            datasource.getMetadata().put("description", "Eine Beispiel-Datenquelle für das Hackathon-Projekt");
+            // Beispiel 1: Öffentliche Verkehrsdaten
+            Datasource verkehrsdaten = new Datasource();
+            verkehrsdaten.setTitle("Verkehrsströme Landkreis Leer");
+            verkehrsdaten.setDescription(
+                    "Tägliche Verkehrszählungen an Hauptverkehrsstraßen im Landkreis Leer. Enthält Daten über Fahrzeugfrequenz, Durchschnittsgeschwindigkeit und Verkehrsaufkommen.");
+            verkehrsdaten.setCategory(Datasource.Category.GOVERNMENT);
+            verkehrsdaten.setDataFormat(Datasource.DataFormat.CSV);
+            verkehrsdaten.setAccessLevel(Datasource.AccessLevel.PUBLIC);
+            verkehrsdaten.setContactEmail("verkehr@lkleer.de");
+            verkehrsdaten.setContactName("Amt für Straßen und Verkehr");
+            verkehrsdaten.setOrganization("Landkreis Leer");
+            verkehrsdaten.setDataUrl("https://opendata.lkleer.de/verkehr/daily-counts.csv");
+            verkehrsdaten.setUpdateFrequency("Täglich");
+            verkehrsdaten.setLicenseType("CC0 - Public Domain");
+            verkehrsdaten.setRequiresCertificate(false);
+            verkehrsdaten.getTags().addAll(List.of("Verkehr", "Mobilität", "Ostfriesland", "Öffentlich"));
+            verkehrsdaten.getAdditionalMetadata().put("Messstandorte", "15 Zählstellen");
+            verkehrsdaten.getAdditionalMetadata().put("Zeitraum", "Seit 2020");
 
-            datasourceRepository.save(datasource);
-            System.out.println("✅ Default datasource created: Beispiel Datenquelle");
+            // Beispiel 2: Umweltdaten mit Zertifikat
+            Datasource umweltdaten = new Datasource();
+            umweltdaten.setTitle("Grundwasser-Messwerte Aurich");
+            umweltdaten.setDescription(
+                    "Kontinuierliche Überwachung der Grundwasserqualität und -stände im Landkreis Aurich. Enthält sensible Daten über Nitratbelastung und Schadstoffe.");
+            umweltdaten.setCategory(Datasource.Category.GOVERNMENT);
+            umweltdaten.setDataFormat(Datasource.DataFormat.REST_API);
+            umweltdaten.setAccessLevel(Datasource.AccessLevel.RESTRICTED);
+            umweltdaten.setContactEmail("umwelt@aurich.de");
+            umweltdaten.setContactName("Dr. Maria Schmidt");
+            umweltdaten.setOrganization("Landkreis Aurich - Umweltamt");
+            umweltdaten.setDataUrl("https://api.aurich.de/umwelt/groundwater");
+            umweltdaten.setDocumentationUrl("https://docs.aurich.de/umwelt-api");
+            umweltdaten.setUpdateFrequency("Stündlich");
+            umweltdaten.setLicenseType("Behördenlizenz");
+            umweltdaten.setRequiresCertificate(true);
+            umweltdaten.setCertificateRequirements("Forschungs- oder Behördenzertifikat erforderlich");
+            umweltdaten.getTags().addAll(List.of("Umwelt", "Grundwasser", "Nitrat", "Forschung", "Sensibel"));
+            umweltdaten.getAdditionalMetadata().put("Messstellen", "45 Brunnen");
+            umweltdaten.getAdditionalMetadata().put("Parameter", "pH, Nitrat, Schwermetalle, Pestizide");
+
+            // Beispiel 3: Wirtschaftsdaten
+            Datasource wirtschaftsdaten = new Datasource();
+            wirtschaftsdaten.setTitle("Tourismusstatistik Wittmund");
+            wirtschaftsdaten.setDescription(
+                    "Übernachtungszahlen, Gästeankunfte und touristische Kennzahlen für den Landkreis Wittmund. Wichtig für Tourismusförderung und Regionalplanung.");
+            wirtschaftsdaten.setCategory(Datasource.Category.BUSINESS);
+            wirtschaftsdaten.setDataFormat(Datasource.DataFormat.EXCEL);
+            wirtschaftsdaten.setAccessLevel(Datasource.AccessLevel.PUBLIC);
+            wirtschaftsdaten.setContactEmail("tourismus@wittmund.de");
+            wirtschaftsdaten.setContactName("Wirtschaftsförderung Wittmund");
+            wirtschaftsdaten.setOrganization("Landkreis Wittmund");
+            wirtschaftsdaten.setUpdateFrequency("Monatlich");
+            wirtschaftsdaten.setLicenseType("CC-BY 4.0");
+            wirtschaftsdaten.setRequiresCertificate(false);
+            wirtschaftsdaten.getTags().addAll(List.of("Tourismus", "Wirtschaft", "Statistik", "Wittmund"));
+
+            datasourceRepository.saveAll(List.of(verkehrsdaten, umweltdaten, wirtschaftsdaten));
+            System.out.println("✅ Default datasources created: 3 Beispiel-Datenquellen");
         }
     }
 }
