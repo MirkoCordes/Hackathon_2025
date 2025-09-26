@@ -17,19 +17,54 @@ class AppScaffold extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hackathon 2025'),
+        title: Navigator.of(context).canPop()
+            ? null
+            : GestureDetector(
+                onTap: () {
+                  if(context.mounted){
+                    GoRouter.of(context).go('/catalog');
+                  }
+                },
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontFamily: 'Cascadia Code',
+                      fontSize: 20,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      const TextSpan(text: 'Ostfriesland '),
+                      const TextSpan(
+                        text: 'Data',
+                        style: TextStyle(color: Color(0xFFFF3838)),
+                      ),
+                      const TextSpan(
+                        text: 'Hub',
+                        style: TextStyle(color: Color(0xFF4242FF)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
         // Show a close (X) button on the leading side when this route can be popped.
         // That allows pushed routes (like /user) to be closed with an X.
-        leading:
-            Navigator.of(context).canPop()
-                ? IconButton(
-                  tooltip: 'Schließen',
-                  icon: const Icon(Icons.close),
+        leading: Navigator.of(context).canPop()
+            ? IconButton(
+                tooltip: 'Schließen',
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  GoRouter.of(context).pop();
+                },
+              )
+            : Builder(
+                builder: (context) => IconButton(
+                  tooltip: 'Menü',
+                  icon: Image.asset('assets/images/IconKleinTransparent.png'), // Custom icon path
                   onPressed: () {
-                    GoRouter.of(context).pop();
+                    Scaffold.of(context).openDrawer();
                   },
-                )
-                : null,
+                ),
+              ),
         actions: [
           // Certificate review icon - navigates to /certificates/review using push so it can be popped/closed
           CertificateReviewWidget(),
@@ -64,18 +99,19 @@ class AppScaffold extends ConsumerWidget {
               child: Image.asset('assets/images/LogoGroßTransparent2.png'),
             ),
             ListTile(
+              title: const Text('Startseite'),
+              onTap: () {
+                if(context.mounted){
+                    GoRouter.of(context).go('/catalog');
+                  }
+              },
+            ),
+            ListTile(
               title: const Text('Datenbedarf'),
               onTap: () {
                 if(context.mounted){
                   GoRouter.of(context).goNamed('datarequests');
                 }
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
               },
             ),
           ],
