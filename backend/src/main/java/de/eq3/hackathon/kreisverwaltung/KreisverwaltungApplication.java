@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class KreisverwaltungApplication {
 
 	public static void main(String[] args) {
+		System.out.println("Starting Kreisverwaltung Application...");
 		SpringApplication.run(KreisverwaltungApplication.class, args);
 	}
 
