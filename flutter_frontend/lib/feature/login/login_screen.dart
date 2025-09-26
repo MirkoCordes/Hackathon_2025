@@ -55,22 +55,30 @@ class LoginScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Passwort
-                  TextFormField(
+                    TextFormField(
                     controller: _passwordController,
                     obscureText: true,
+                    textInputAction: TextInputAction.done,
                     decoration: const InputDecoration(
                       labelText: 'Passwort',
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.lock),
                     ),
-                    validator:
-                        (value) =>
-                            value!.length < 4
-                                ? 'Passwort muss min. 4 Zeichen haben.'
-                                : null,
-
+                    validator: (value) =>
+                      value!.length < 4
+                        ? 'Passwort muss min. 4 Zeichen haben.'
+                        : null,
                     // Fehler beim Tippen zurücksetzen
-                  ),
+                    onFieldSubmitted: (_) async {
+                      await controller.login(
+                      _usernameController.text,
+                      _passwordController.text,
+                      );
+                      if (context.mounted) {
+                      GoRouter.of(context).goNamed('catalog');
+                      }
+                    },
+                    ),
                   const SizedBox(height: 24),
 
                   const SizedBox(height: 12),
