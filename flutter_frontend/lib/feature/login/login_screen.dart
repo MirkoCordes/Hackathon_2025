@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/feature/login/login.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerWidget {
   LoginScreen({super.key});
@@ -84,6 +85,9 @@ class LoginScreen extends ConsumerWidget {
                           _usernameController.text,
                           _passwordController.text,
                         );
+                        if (context.mounted) {
+                          await GoRouter.of(context).push('/catalog');
+                        }
                       },
                       child: const Text(
                         'Anmelden',
