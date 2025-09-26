@@ -76,36 +76,38 @@ public class Certificate {
         GOVERNMENT_HEALTH("Behörde Gesundheit", "Gesundheitsamt, Seuchenschutz"),
         GOVERNMENT_STATISTICS("Behörde Statistik", "Statistisches Amt"),
         GOVERNMENT_PLANNING("Behörde Planung", "Stadtplanung, Raumordnung"),
-        
+
         // === RESEARCH CERTIFICATES ===
         RESEARCH_UNIVERSITY("Universität", "Hochschul-Zugehörigkeit"),
         RESEARCH_ENVIRONMENTAL("Umweltforschung", "Institute für Umwelt- und Klimaforschung"),
         RESEARCH_HEALTH("Medizinische Forschung", "Medizinische Fakultäten, Kliniken"),
         RESEARCH_SOCIAL("Sozialforschung", "Soziologie, Demographie"),
         RESEARCH_ECONOMIC("Wirtschaftsforschung", "Wirtschaftsinstitute"),
-        
+
         // === PROFESSIONAL CERTIFICATES ===
         PROFESSIONAL_LAWYER("Rechtsanwalt", "Anwaltskammer-Zulassung"),
         PROFESSIONAL_DOCTOR("Arzt/Mediziner", "Ärztekammer-Zulassung"),
         PROFESSIONAL_ENGINEER("Ingenieur", "Ingenieurskammer, Sachverständiger"),
         PROFESSIONAL_JOURNALIST("Journalist", "Presseausweis"),
         PROFESSIONAL_CONSULTANT("Berater", "Zertifizierte Beratung"),
-        
+
         // === BUSINESS CERTIFICATES ===
         BUSINESS_GENERAL("Unternehmen Allgemein", "Gewerbeschein, Handelsregister"),
         BUSINESS_ENVIRONMENTAL("Umweltunternehmen", "Umwelttechnik, Entsorgung"),
         BUSINESS_HEALTHCARE("Gesundheitsunternehmen", "Pharma, Medizintechnik"),
         BUSINESS_CONSULTING("Beratungsunternehmen", "Zertifizierte Unternehmensberatung"),
         BUSINESS_MEDIA("Medienunternehmen", "Presse, Rundfunk, Online-Medien"),
-        
+
         // === CIVIL SOCIETY ===
         NGO_ENVIRONMENTAL("Umwelt-NGO", "Greenpeace, NABU, etc."),
         NGO_SOCIAL("Soziale NGO", "Caritas, DRK, etc."),
         NGO_TRANSPARENCY("Transparenz-NGO", "FragDenStaat, Lobbycontrol"),
-        
+
         // === BASIC PROOFS ===
         PERSONAL_ID("Personalausweis", "Amtlicher Lichtbildausweis"),
-        OTHER("Sonstiges", "Andere Nachweise");        private final String displayName;
+        OTHER("Sonstiges", "Andere Nachweise");
+
+        private final String displayName;
         private final String description;
 
         CertificateType(String displayName, String description) {

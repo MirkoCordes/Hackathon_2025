@@ -21,44 +21,45 @@ public class Datasource {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-    // === REQUIRED ATTRIBUTES ===
-    @Column(nullable = false)
-    private String title; // Data source name
+	// === REQUIRED ATTRIBUTES ===
+	@Column(nullable = false)
+	private String title; // Data source name
 
-    @Column(length = 2000)
-    private String description; // Detailed description
+	@Column(length = 2000)
+	private String description; // Detailed description
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Category category; // Government, Business, Science, Civil Society
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Category category; // Government, Business, Science, Civil Society
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)  
-    private DataFormat dataFormat; // CSV, JSON, API, Database, etc.
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private DataFormat dataFormat; // CSV, JSON, API, Database, etc.
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AccessLevel accessLevel; // PUBLIC, RESTRICTED, PRIVATE
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private AccessLevel accessLevel; // PUBLIC, RESTRICTED, PRIVATE
 
-    // === CONTACT & ACCESS ===
-    @Column(nullable = false)
-    private String contactEmail; // Contact person
+	// === CONTACT & ACCESS ===
+	@Column(nullable = false)
+	private String contactEmail; // Contact person
 
-    @Column
-    private String contactName; // Contact person name
+	@Column
+	private String contactName; // Contact person name
 
-    @Column
-    private String organization; // Organization/Authority
+	@Column
+	private String organization; // Organization/Authority
 
-    @Column
-    private String dataUrl; // URL to data source or API
+	@Column
+	private String dataUrl; // URL to data source or API
 
-    @Column
-    private String documentationUrl; // Link to documentation
+	@Column
+	private String documentationUrl; // Link to documentation
 
-    // === CERTIFICATES & SECURITY ===
-    @Column(nullable = false)
-    private Boolean requiresCertificate = false; // Requires certificate for access	@ElementCollection(targetClass = Certificate.CertificateType.class)
+	// === CERTIFICATES & SECURITY ===
+	@Column(nullable = false)
+	private Boolean requiresCertificate = false; // Requires certificate for access @ElementCollection(targetClass =
+													// Certificate.CertificateType.class)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "datasource_required_certificates", joinColumns = @JoinColumn(name = "datasource_id"))
 	@Column(name = "certificate_type")
