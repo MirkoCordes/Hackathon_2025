@@ -52,7 +52,7 @@ class MyDatasetsRepository {
     debugPrint(json);
 
     final response = await http.post(
-      Uri.http('localhost:8080', '/api/datasources/'),
+      Uri.http('localhost:8080', '/api/datasources'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $jwt',

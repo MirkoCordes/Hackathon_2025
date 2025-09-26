@@ -120,10 +120,10 @@ class AppScaffold extends ConsumerWidget {
               child: Image.asset('assets/images/LogoGroßTransparent2.png'),
             ),
             ListTile(
-              title: const Text('Startseite'),
+              title: const Text('Katalog'),
               onTap: () {
                 if(context.mounted){
-                    GoRouter.of(context).go('/catalog');
+                    GoRouter.of(context).goNamed('catalog');
                   }
               },
             ),
@@ -131,7 +131,15 @@ class AppScaffold extends ConsumerWidget {
               title: const Text('Datenbedarf'),
               onTap: () {
                 if(context.mounted){
-                  GoRouter.of(context).goNamed('datarequests');
+                  GoRouter.of(context).goNamed('dataRequests');
+                }
+              },
+            ),
+            ListTile(
+              title: const Text('Meine Daten'),
+              onTap: () {
+                if(context.mounted){
+                  GoRouter.of(context).goNamed('myDatasets');
                 }
               },
             ),

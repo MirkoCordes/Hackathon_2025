@@ -39,14 +39,14 @@ final GoRouter router = GoRouter(
       builder: (context, state) => AppScaffold(body: CertificatePendingPage()),
     ),
     GoRoute(
-      path: '/datarequests',
-      name: 'datarequests',
+      path: '/dataRequests',
+      name: 'dataRequests',
       builder:
           (context, state) => const AppScaffold(body: DataRequestsScreen()),
     ),
     GoRoute(
-      path: '/my-datasets',
-      name: 'my-datasets',
+      path: '/myDatasets',
+      name: 'myDatasets',
       builder: (context, state) => const AppScaffold(body: MyDatasetsScreen()),
     ),
   ],
