@@ -11,6 +11,53 @@ import 'package:http/http.dart' as http;
 class DataRequestsRepository {
   static const String url = 'http://localhost:8080/api/data-marketplace';
 
+  /// Creates a new data request
+  Future<DataRequestModel> createDataRequest(DataRequestModel dataRequest) async {
+    final String? jwt = await JwtRepository().getJwt();
+    if (jwt == null) {
+      throw Exception('Authentication required');
+    }
+
+    // Use the toJson method of the DataRequestModel to build the request body
+    final Map<String, dynamic> requestBody = dataRequest.toJson();
+
+    // Remove fields that shouldn't be sent to the server (auto-generated/managed by backend)
+    requestBody.remove('id');
+    requestBody.remove('createdAt');
+    requestBody.remove('lastUpdated');
+    requestBody.remove('closedAt');
+    requestBody.remove('closedReason');
+    requestBody.remove('open');
+    requestBody.remove('activeResponseIds');
+    requestBody.remove('responseCount');
+    requestBody.remove('formattedAge');
+    requestBody.remove('responseIds');
+    requestBody.remove('userId');
+
+    final response = await http.post(
+      Uri.parse('$url/requests'),
+      headers: {
+        'Authorization': 'Bearer $jwt',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final String utf8Decoded = utf8.decode(response.bodyBytes);
+      final Map<String, dynamic> jsonMap = json.decode(utf8Decoded);
+      return DataRequestModel.fromJson(jsonMap);
+    } else if (response.statusCode == 400) {
+      final String errorBody = utf8.decode(response.bodyBytes);
+      throw Exception('Bad request: $errorBody');
+    } else if (response.statusCode == 401) {
+      throw Exception('Unauthorized - please log in again');
+    } else if (response.statusCode == 403) {
+      throw Exception('Forbidden');
+    }
+    throw Exception('Failed to create data request: ${response.statusCode} - ${response.body}');
+  }
+
   Future<DataRequestsModel> get(
     String status,
     String? category,
