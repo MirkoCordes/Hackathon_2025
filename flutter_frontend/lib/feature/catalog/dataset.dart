@@ -5,6 +5,22 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'dataset.g.dart';
 
+String getJsonValueForCategoryEnum(Category category) {
+  return _$CategoryEnumMap[category]!;
+}
+
+String getJsonValueForDataFormatEnum(DataFormat dataFormat) {
+  return _$DataFormatEnumMap[dataFormat]!;
+}
+
+String getJsonValueForAccessLevelEnum(AccessLevel accessLevel) {
+  return _$AccessLevelEnumMap[accessLevel]!;
+}
+
+String getJsonValueForDataSensitivityEnum(DataSensitivity dataSensitivity) {
+  return _$DataSensitivityEnumMap[dataSensitivity]!;
+}
+
 @JsonEnum()
 enum Category {
   @JsonValue('GOVERNMENT')
@@ -123,7 +139,6 @@ class Dataset {
     required this.additionalMetadata,
   });
 
-  factory Dataset.fromJson(Map<String, dynamic> json) =>
-      _$DatasetFromJson(json);
+  factory Dataset.fromJson(Map<String, dynamic> json) => _$DatasetFromJson(json);
   Map<String, dynamic> toJson() => _$DatasetToJson(this);
 }

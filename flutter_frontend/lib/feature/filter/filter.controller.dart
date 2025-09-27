@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/filter/filter_list.state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +33,7 @@ class FilterController extends _$FilterController {
       accessLevel: accessLevel,
       dataSensitivity: dataSensitivity,
     );
+    debugPrint("New filter state: $state");
     ref
         .read(catalogControllerProvider.notifier)
         .search(

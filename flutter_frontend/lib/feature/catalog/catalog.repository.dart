@@ -31,16 +31,16 @@ class CatalogRepository {
     };
 
     if (category != null) {
-      queryParameter.putIfAbsent('category', () => category);
+      queryParameter.putIfAbsent('category', () => jsonEncode(category));
     }
     if (dataFormat != null) {
-      queryParameter.putIfAbsent('dataFormat', () => dataFormat);
+      queryParameter.putIfAbsent('dataFormat', () => jsonEncode(dataFormat));
     }
     if (accessLevel != null) {
-      queryParameter.putIfAbsent('accessLevel', () => accessLevel);
+      queryParameter.putIfAbsent('accessLevel', () => jsonEncode(accessLevel));
     }
     if (dataSensitivity != null) {
-      queryParameter.putIfAbsent('dataSensitivity', () => dataSensitivity);
+      queryParameter.putIfAbsent('dataSensitivity', () => jsonEncode(dataSensitivity));
     }
 
     final response = await http.get(
