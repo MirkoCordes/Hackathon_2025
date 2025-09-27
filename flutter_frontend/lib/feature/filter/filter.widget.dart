@@ -63,10 +63,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                     // Zeigt nichts an, wenn kein Wert ausgewählt ist
                     : null,
           ),
-          items:
-              widget.types
-                  .map((c) => DropdownMenuItem(value: c, child: Text(c.name)))
-                  .toList(),
+          items: widget.types.map((c) => DropdownMenuItem(value: c, child: Text(c.name))).toList(),
           onChanged:
               (v) => setState(() {
                 // update Value on Provider
@@ -89,35 +86,39 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
     FilterController filterController,
     FilterListState filterStates,
   ) async {
-    switch (_selectedEnum.runtimeType) {
-      case final Category _:
+    if (_selectedEnum == null) return;
+
+    switch (_selectedEnum) {
+      case final Category category:
         await filterController.updateFilter(
-          category: _selectedEnum,
+          category: category,
           accessLevel: filterStates.accessLevel,
           dataFormat: filterStates.dataFormat,
           dataSensitivity: filterStates.dataSensitivity,
         );
-      case final DataFormat _:
+      case final DataFormat dataFormat:
         await filterController.updateFilter(
           category: filterStates.category,
           accessLevel: filterStates.accessLevel,
-          dataFormat: _selectedEnum,
+          dataFormat: dataFormat,
           dataSensitivity: filterStates.dataSensitivity,
         );
-      case final AccessLevel _:
+      case final AccessLevel accessLevel:
         await filterController.updateFilter(
           category: filterStates.category,
-          accessLevel: _selectedEnum,
+          accessLevel: accessLevel,
           dataFormat: filterStates.dataFormat,
           dataSensitivity: filterStates.dataSensitivity,
         );
-      case final DataSensitivity _:
+      case final DataSensitivity dataSensitivity:
         await filterController.updateFilter(
           category: filterStates.category,
           accessLevel: filterStates.accessLevel,
           dataFormat: filterStates.dataFormat,
-          dataSensitivity: _selectedEnum,
+          dataSensitivity: dataSensitivity,
         );
+      default:
+        debugPrint("Unknown type selected: $_selectedEnum");
     }
   }
 }
