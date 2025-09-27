@@ -5,8 +5,8 @@ part 'data_request_response.model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class DataRequestResponseModel {
   final int id;
-  final int dataRequestId;
-  final int responderId;
+  final int? dataRequestId;
+  final int? responderId;
   final String responseType;
   final String message;
 
@@ -35,7 +35,7 @@ class DataRequestResponseModel {
 
   DataRequestResponseModel({
     required this.id,
-    required this.dataRequestId,
+    this.dataRequestId,
     required this.responderId,
     required this.responseType,
     required this.message,

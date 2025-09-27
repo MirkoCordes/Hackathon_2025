@@ -150,6 +150,14 @@ class AppScaffold extends ConsumerWidget {
                 }
               },
             ),
+            ListTile(
+              title: const Text('Meine Anfragen'),
+              onTap: () {
+                if (context.mounted) {
+                  GoRouter.of(context).goNamed('myDataRequests');
+                }
+              },
+            ),
           ],
         ),
       ),

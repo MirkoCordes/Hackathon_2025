@@ -240,7 +240,7 @@ public class DataRequestController {
     }
 
     @GetMapping("/requests/{requestId}/responses")
-    public ResponseEntity<List<DataRequestResponse>> getResponsesForRequest(@PathVariable Long requestId) {
+    public ResponseEntity<Map<String, List<DataRequestResponse>>> getResponsesForRequest(@PathVariable Long requestId) {
         Optional<DataRequest> requestOpt = dataRequestRepository.findById(requestId);
         if (requestOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -248,12 +248,12 @@ public class DataRequestController {
 
         List<DataRequestResponse> responses = responseRepository
                 .findByDataRequestOrderByCreatedAtDesc(requestOpt.get());
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(Map.of("responses", responses));
     }
 
     @GetMapping("/my-responses")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<DataRequestResponse>> getMyResponses() {
+    public ResponseEntity<Map<String, List<DataRequestResponse>>> getMyResponses() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByUsername(auth.getName()).orElse(null);
 
@@ -262,7 +262,7 @@ public class DataRequestController {
         }
 
         List<DataRequestResponse> myResponses = responseRepository.findByResponderOrderByCreatedAtDesc(currentUser);
-        return ResponseEntity.ok(myResponses);
+        return ResponseEntity.ok(Map.of("responses", myResponses));
     }
 
     // === REQUEST STATUS MANAGEMENT ===

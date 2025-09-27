@@ -1,6 +1,8 @@
 package de.eq3.hackathon.kreisverwaltung.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +44,13 @@ public class DataRequestResponse {
     // === FÜR BESTEHENDE DATENQUELLEN ===
     @ManyToOne
     @JoinColumn(name = "existing_datasource_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Datasource existingDatasource; // Falls bereits eine passende Datenquelle existiert
+
+    @Transient
+    public Integer getExistingDatasourceId() {
+        return existingDatasource != null ? existingDatasource.getId().intValue() : null;
+    }
 
     // === FÜR NEUE DATENQUELLEN ===
     @Column

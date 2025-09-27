@@ -10,8 +10,8 @@ DataRequestResponseModel _$DataRequestResponseModelFromJson(
   Map<String, dynamic> json,
 ) => DataRequestResponseModel(
   id: (json['id'] as num).toInt(),
-  dataRequestId: (json['dataRequestId'] as num).toInt(),
-  responderId: (json['responderId'] as num).toInt(),
+  dataRequestId: (json['dataRequestId'] as num?)?.toInt(),
+  responderId: (json['responderId'] as num?)?.toInt(),
   responseType: json['responseType'] as String,
   message: json['message'] as String,
   existingDatasourceId: (json['existingDatasourceId'] as num?)?.toInt(),
