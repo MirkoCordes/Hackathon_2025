@@ -31,24 +31,27 @@ class CatalogRepository {
     };
 
     if (category != null) {
-      queryParameter.putIfAbsent('category', () => category.name.toUpperCase());
+      queryParameter.putIfAbsent(
+        'category',
+        () => getJsonValueForCategoryEnum(category),
+      );
     }
     if (dataFormat != null) {
       queryParameter.putIfAbsent(
         'dataFormat',
-        () => dataFormat.name.toUpperCase(),
+        () => getJsonValueForDataFormatEnum(dataFormat),
       );
     }
     if (accessLevel != null) {
       queryParameter.putIfAbsent(
         'accessLevel',
-        () => accessLevel.name.toUpperCase(),
+        () => getJsonValueForAccessLevelEnum(accessLevel),
       );
     }
     if (dataSensitivity != null) {
       queryParameter.putIfAbsent(
         'dataSensitivity',
-        () => dataSensitivity.name.toUpperCase(),
+        () => getJsonValueForDataSensitivityEnum(dataSensitivity),
       );
     }
 

@@ -1,3 +1,4 @@
+import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/filter/filter_list.state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,5 +24,14 @@ class FilterController extends _$FilterController {
       accessLevel: accessLevel,
       dataSensitivity: dataSensitivity,
     );
+    ref
+        .read(catalogControllerProvider.notifier)
+        .search(
+          query: ref.read(catalogControllerProvider).searchQuery,
+          category: category,
+          dataFormat: dataFormat,
+          accessLevel: accessLevel,
+          dataSensitivity: dataSensitivity,
+        );
   }
 }

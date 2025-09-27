@@ -33,6 +33,11 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
       filterControllerProvider.notifier,
     );
 
+    final filterListState = ref.watch(filterControllerProvider);
+    final catalogState = ref.watch(
+      catalogControllerProvider,
+    );
+
     return Expanded(
       child: Padding(
         padding: EdgeInsetsGeometry.all(8),
@@ -55,23 +60,9 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                           _selectedEnum = null;
                         });
 
-                        final catalogState = ref.watch(
-                          catalogControllerProvider,
-                        );
-                        final filterListState = ref.watch(
-                          filterControllerProvider,
-                        );
-
                         await updateFilterList(
                           filterController,
                           filterListState,
-                        );
-                        await catalogController.search(
-                          query: catalogState.searchQuery,
-                          category: filterListState.category,
-                          dataFormat: filterListState.dataFormat,
-                          accessLevel: filterListState.accessLevel,
-                          dataSensitivity: filterListState.dataSensitivity,
                         );
                         print(
                           'query: ${catalogState.searchQuery}; \n - category: ${filterListState.category} \n - dataformat: ${filterListState.dataFormat} \n - accessLevel: ${filterListState.accessLevel} \n - dataSensitivity: ${filterListState.dataSensitivity}',
@@ -90,18 +81,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
               _previousSelectedEnum = _selectedEnum;
               _selectedEnum = v;
             });
-
-            final catalogState = ref.watch(catalogControllerProvider);
-            final filterListState = ref.watch(filterControllerProvider);
-
             await updateFilterList(filterController, filterListState);
-            await catalogController.search(
-              query: catalogState.searchQuery,
-              category: filterListState.category,
-              dataFormat: filterListState.dataFormat,
-              accessLevel: filterListState.accessLevel,
-              dataSensitivity: filterListState.dataSensitivity,
-            );
             print(
               'query: ${catalogState.searchQuery}; \n - category: ${filterListState.category} \n - dataformat: ${filterListState.dataFormat} \n - accessLevel: ${filterListState.accessLevel} \n - dataSensitivity: ${filterListState.dataSensitivity}',
             );

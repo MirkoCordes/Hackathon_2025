@@ -9,21 +9,17 @@ class FilterListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final catalogState = ref.watch(catalogControllerProvider);
-
-    return catalogState.datasets.isNotEmpty
-        ? Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            FilterWidget(types: Category.values, typeName: 'Kategorie'),
-            FilterWidget(types: DataFormat.values, typeName: 'Format'),
-            FilterWidget(types: AccessLevel.values, typeName: 'Zugriffsart'),
-            FilterWidget(
-              types: DataSensitivity.values,
-              typeName: 'Datensesibilität',
-            ),
-          ],
-        )
-        : Container();
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        FilterWidget(types: Category.values, typeName: 'Kategorie'),
+        FilterWidget(types: DataFormat.values, typeName: 'Format'),
+        FilterWidget(types: AccessLevel.values, typeName: 'Zugriffsart'),
+        FilterWidget(
+          types: DataSensitivity.values,
+          typeName: 'Datensesibilität',
+        ),
+      ],
+    );
   }
 }

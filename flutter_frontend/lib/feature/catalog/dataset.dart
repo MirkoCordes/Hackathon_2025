@@ -69,6 +69,22 @@ enum DataSensitivity {
   classified,
 }
 
+String getJsonValueForCategoryEnum(Category category) {
+  return _$CategoryEnumMap[category]!;
+}
+
+String getJsonValueForDataFormatEnum(DataFormat dataFormat) {
+  return _$DataFormatEnumMap[dataFormat]!;
+}
+
+String getJsonValueForAccessLevelEnum(AccessLevel accessLevel) {
+  return _$AccessLevelEnumMap[accessLevel]!;
+}
+
+String getJsonValueForDataSensitivityEnum(DataSensitivity dataSensitivity) {
+  return _$DataSensitivityEnumMap[dataSensitivity]!;
+}
+
 @JsonSerializable()
 class Dataset {
   final int id;
