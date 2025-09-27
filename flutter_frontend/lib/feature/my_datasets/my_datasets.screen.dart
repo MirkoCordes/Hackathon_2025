@@ -23,6 +23,7 @@ class MyDatasetsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 10),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               label: const Text('Neuen Datensatz hinzufügen'),

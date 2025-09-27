@@ -18,7 +18,7 @@ class MyDatasetsRepository {
     }
 
     final response = await http.get(
-      Uri.http('localhost:8080', '/api/datasources/my-accessible'),
+      Uri.http('localhost:8080', '/api/datasources/my'),
       headers: {
         'Authorization': 'Bearer $jwt',
       },

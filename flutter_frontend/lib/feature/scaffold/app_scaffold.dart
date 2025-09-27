@@ -29,24 +29,27 @@ class AppScaffold extends ConsumerWidget {
                     GoRouter.of(context).go('/catalog');
                   }
                 },
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      fontFamily: 'Cascadia Code',
-                      fontSize: 20,
-                      color: Colors.black,
+                child: Tooltip(
+                  message: 'Startseite',
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontFamily: 'Cascadia Code',
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        const TextSpan(text: 'Ostfriesland '),
+                        const TextSpan(
+                          text: 'Data',
+                          style: TextStyle(color: Color(0xFFFF3838)),
+                        ),
+                        const TextSpan(
+                          text: 'Hub',
+                          style: TextStyle(color: Color(0xFF4242FF)),
+                        ),
+                      ],
                     ),
-                    children: [
-                      const TextSpan(text: 'Ostfriesland '),
-                      const TextSpan(
-                        text: 'Data',
-                        style: TextStyle(color: Color(0xFFFF3838)),
-                      ),
-                      const TextSpan(
-                        text: 'Hub',
-                        style: TextStyle(color: Color(0xFF4242FF)),
-                      ),
-                    ],
                   ),
                 ),
               ),

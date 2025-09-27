@@ -93,6 +93,12 @@ public class DatasourceController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Datasource> getDatasourceById(@PathVariable Long id) {
 		Optional<Datasource> datasource = datasourceService.getDatasourceById(id);
+
+		if (datasource.isPresent()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User currentUser = userService.findByUsername(auth.getName()).orElse(null);
+			datasource.get().setHasAccess(currentUser.canAccessDatasource(datasource.get()));
+		}
 		return datasource.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
@@ -100,7 +106,10 @@ public class DatasourceController {
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	@PreAuthorize("hasAnyRole('DATA_PROVIDER','ADMIN')")
 	public ResponseEntity<Datasource> createDatasource(@RequestBody Datasource datasource) {
+		datasource.setOwner(userService.findByUsername(
+				SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null));
 		Datasource saved = datasourceService.saveDatasource(datasource);
+
 		return ResponseEntity.ok(saved);
 	}
 
@@ -113,6 +122,7 @@ public class DatasourceController {
 		}
 
 		datasource.setId(id);
+		datasource.setOwner(datasourceService.getDatasourceById(id).get().getOwner()); // Prevent owner change
 		Datasource updated = datasourceService.saveDatasource(datasource);
 		return ResponseEntity.ok(updated);
 	}
@@ -157,6 +167,32 @@ public class DatasourceController {
 		}
 
 		List<Datasource> accessible = datasourceService.getAccessibleDatasources(currentUser);
+
+		for (Datasource ds : accessible) {
+			ds.setHasAccess(true);
+		}
+
+		return ResponseEntity.ok(Map.of("datasources", accessible));
+	}
+
+	@GetMapping("/my")
+	@PreAuthorize("isAuthenticated()")
+	public ResponseEntity<Map<String, List<Datasource>>> getMyDatasources() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = userService.findByUsername(auth.getName()).orElse(null);
+
+		if (currentUser == null) {
+			return ResponseEntity.status(401).build();
+		}
+
+		List<Datasource> accessible = datasourceService.getAllDatasources().stream()
+				.filter(ds -> ds.getOwner().getId().equals(currentUser.getId()))
+				.collect(Collectors.toList());
+
+		for (Datasource ds : accessible) {
+			ds.setHasAccess(true);
+		}
+
 		return ResponseEntity.ok(Map.of("datasources", accessible));
 	}
 
