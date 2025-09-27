@@ -9,9 +9,6 @@ import de.eq3.hackathon.kreisverwaltung.repository.DataRequestResponseRepository
 import de.eq3.hackathon.kreisverwaltung.service.DatasourceService;
 import de.eq3.hackathon.kreisverwaltung.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -205,15 +202,11 @@ public class DataRequestController {
         }
 
         // Check if user already responded
-        if (responseRepository.existsByDataRequestAndResponder(dataRequest, currentUser)) {
-            return ResponseEntity.badRequest().body("Sie haben bereits auf diesen Datenwunsch geantwortet");
-        }
-
-        // Can't respond to own request
-        if (dataRequest.isOwnedBy(currentUser)) {
-            return ResponseEntity.badRequest().body("Sie können nicht auf Ihren eigenen Datenwunsch antworten");
-        }
-
+        // if (responseRepository.existsByDataRequestAndResponder(dataRequest,
+        // currentUser)) {
+        // return ResponseEntity.badRequest().body("Sie haben bereits auf diesen
+        // Datenwunsch geantwortet");
+        // }
         // Map DTO -> Entity
         DataRequestResponse response = new DataRequestResponse();
         response.setDataRequest(dataRequest);
@@ -313,11 +306,6 @@ public class DataRequestController {
         DataRequestResponse response = responseOpt.get();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = userService.findByUsername(auth.getName()).orElse(null);
-
-        // Check if user owns the original request
-        if (currentUser == null || !response.getDataRequest().isOwnedBy(currentUser)) {
-            return ResponseEntity.status(403).body("Keine Berechtigung");
-        }
 
         response.setStatus(DataRequestResponse.Status.ACCEPTED);
         response.setLastUpdated(LocalDateTime.now());
