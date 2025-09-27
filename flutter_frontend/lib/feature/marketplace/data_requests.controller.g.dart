@@ -7,7 +7,7 @@ part of 'data_requests.controller.dart';
 // **************************************************************************
 
 String _$dataRequestsControllerHash() =>
-    r'91fa5a8c0a053cc507cecdc97a5e291fcc0c9dc8';
+    r'f20def9246ec9e5fa922cc40125ebe9cfcb22d5e';
 
 /// See also [DataRequestsController].
 @ProviderFor(DataRequestsController)

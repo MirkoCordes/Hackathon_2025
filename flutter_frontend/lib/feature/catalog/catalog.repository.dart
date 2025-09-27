@@ -1,13 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter_frontend/feature/catalog/catalog_response.model.dart';
+import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/jwt.repository.dart';
 import 'package:http/http.dart' as http;
 
 class CatalogRepository {
   static const String url = "http://localhost:8080/api/datasources";
 
-  Future<CatalogResponse> getCatalogs(String query) async {
+  Future<CatalogResponse> getCatalogs({
+    required String query,
+    Category? category,
+    DataFormat? dataFormat,
+    AccessLevel? accessLevel,
+    DataSensitivity? dataSensitivity,
+  }) async {
     final String? jwt = await JwtRepository().getJwt();
 
     if (jwt == null) {
@@ -19,7 +26,22 @@ class CatalogRepository {
       'Authorization': 'Bearer $jwt',
     };
 
-    final Map<String, dynamic> queryParameter = {'title': query};
+    final Map<String, dynamic> queryParameter = {
+      'title': query,
+    };
+
+    if (category != null) {
+      queryParameter.putIfAbsent('category', () => category);
+    }
+    if (dataFormat != null) {
+      queryParameter.putIfAbsent('dataFormat', () => dataFormat);
+    }
+    if (accessLevel != null) {
+      queryParameter.putIfAbsent('accessLevel', () => accessLevel);
+    }
+    if (dataSensitivity != null) {
+      queryParameter.putIfAbsent('dataSensitivity', () => dataSensitivity);
+    }
 
     final response = await http.get(
       Uri.http('localhost:8080', '/api/datasources', queryParameter),

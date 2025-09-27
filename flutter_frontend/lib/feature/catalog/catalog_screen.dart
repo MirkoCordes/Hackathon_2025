@@ -4,6 +4,7 @@ import 'package:flutter_frontend/feature/catalog/catalog.state.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/feature/catalog/dataset_list_widget.dart';
 import 'package:flutter_frontend/feature/catalog/search/catalog_search_bar.dart';
+import 'package:flutter_frontend/feature/filter/filter_list.screen.dart';
 import 'package:flutter_frontend/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,18 +26,15 @@ class CatalogScreen extends ConsumerWidget {
         children: <Widget>[
           // Suchleiste (bleibt gleich)
           const CatalogSearchBar(),
-
+          const FilterListScreen(),
+          //const SizedBox(height: 16, child: FilterListScreen()),
           const SizedBox(height: 16),
 
           // 2. Ersetzung der DataTable durch ListView.builder
           datasets.isNotEmpty
               ? Expanded(
                 // Wichtig: ListView.builder benötigt definierte Grenzen
-                child: Scrollbar(
-                  thumbVisibility: true,
-                  // ListView.builder ist effizient und von Natur aus scrollbar
-                  child: DatasetListWidget(datasets: datasets),
-                ),
+                child: DatasetListWidget(datasets: datasets),
               )
               : const Padding(
                 padding: EdgeInsets.only(top: 40.0),
