@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/feature/filter/filter.controller.dart';
 import 'package:flutter_frontend/feature/filter/filter_list.state.dart';
@@ -19,9 +20,21 @@ class FilterWidget extends ConsumerStatefulWidget {
 
 class _FilterWidgetState extends ConsumerState<FilterWidget> {
   Enum? _selectedEnum;
+  Enum? _previousSelectedEnum;
 
   @override
   Widget build(BuildContext context) {
+    final CatalogController catalogController = ref.read(
+      catalogControllerProvider.notifier,
+    );
+    final catalogState = ref.read(catalogControllerProvider);
+    final filterListState = ref.read(filterControllerProvider);
+
+    // update Value on Provider
+    final filterController = ref.watch(
+      filterControllerProvider.notifier,
+    );
+
     return Expanded(
       child: Padding(
         padding: EdgeInsetsGeometry.all(8),
@@ -37,27 +50,26 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                     ? IconButton(
                       icon: const Icon(Icons.clear, size: 20),
                       color: Colors.grey.shade600,
-                      onPressed: () {
+                      onPressed: () async {
                         // Wenn der Button geklickt wird:
                         setState(() {
-                          // Den ausgewählten Wert auf null setzen
-                          // update Value on Provider
-                          final filterController = ref.watch(
-                            filterControllerProvider.notifier,
-                          );
-
-                          final filterStates = ref.watch(
-                            filterControllerProvider,
-                          );
-
-                          unawaited(
-                            updateFilterList(
-                              filterController,
-                              filterStates,
-                            ),
-                          );
+                          _previousSelectedEnum = _selectedEnum;
                           _selectedEnum = null;
                         });
+                        await updateFilterList(
+                          filterController,
+                          filterListState,
+                        );
+                        await catalogController.search(
+                          query: catalogState.searchQuery,
+                          category: filterListState.category,
+                          dataFormat: filterListState.dataFormat,
+                          accessLevel: filterListState.accessLevel,
+                          dataSensitivity: filterListState.dataSensitivity,
+                        );
+                        print(
+                          'query: ${catalogState.searchQuery}; \n - category: ${filterListState.category} \n - dataformat: ${filterListState.dataFormat} \n - accessLevel: ${filterListState.accessLevel} \n - dataSensitivity: ${filterListState.dataSensitivity}',
+                        );
                       },
                     )
                     // Zeigt nichts an, wenn kein Wert ausgewählt ist
@@ -67,18 +79,24 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
               widget.types
                   .map((c) => DropdownMenuItem(value: c, child: Text(c.name)))
                   .toList(),
-          onChanged:
-              (v) => setState(() {
-                // update Value on Provider
-                final filterController = ref.watch(
-                  filterControllerProvider.notifier,
-                );
-                final filterStates = ref.watch(
-                  filterControllerProvider,
-                );
-                unawaited(updateFilterList(filterController, filterStates));
-                _selectedEnum = v;
-              }),
+          onChanged: (v) async {
+            setState(() {
+              _previousSelectedEnum = _selectedEnum;
+              _selectedEnum = v;
+            });
+
+            await updateFilterList(filterController, filterListState);
+            await catalogController.search(
+              query: catalogState.searchQuery,
+              category: filterListState.category,
+              dataFormat: filterListState.dataFormat,
+              accessLevel: filterListState.accessLevel,
+              dataSensitivity: filterListState.dataSensitivity,
+            );
+            print(
+              'query: ${catalogState.searchQuery}; \n - category: ${filterListState.category} \n - dataformat: ${filterListState.dataFormat} \n - accessLevel: ${filterListState.accessLevel} \n - dataSensitivity: ${filterListState.dataSensitivity}',
+            );
+          },
           validator: (v) => v == null ? '${widget.typeName} wählen' : null,
         ),
       ),
@@ -89,7 +107,43 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
     FilterController filterController,
     FilterListState filterStates,
   ) async {
-    switch (_selectedEnum.runtimeType) {
+    if (_selectedEnum == null) {
+      switch (_previousSelectedEnum) {
+        case final Category _:
+          await filterController.updateFilter(
+            category: null,
+            accessLevel: filterStates.accessLevel,
+            dataFormat: filterStates.dataFormat,
+            dataSensitivity: filterStates.dataSensitivity,
+          );
+        case final DataFormat _:
+          await filterController.updateFilter(
+            category: filterStates.category,
+            accessLevel: filterStates.accessLevel,
+            dataFormat: _selectedEnum,
+            dataSensitivity: filterStates.dataSensitivity,
+          );
+        case final AccessLevel _:
+          await filterController.updateFilter(
+            category: filterStates.category,
+            accessLevel: _selectedEnum,
+            dataFormat: filterStates.dataFormat,
+            dataSensitivity: filterStates.dataSensitivity,
+          );
+        case final DataSensitivity _:
+          await filterController.updateFilter(
+            category: filterStates.category,
+            accessLevel: filterStates.accessLevel,
+            dataFormat: filterStates.dataFormat,
+            dataSensitivity: _selectedEnum,
+          );
+        default:
+          print('DEFAULT Val 222');
+      }
+      return;
+    }
+
+    switch (_selectedEnum) {
       case final Category _:
         await filterController.updateFilter(
           category: _selectedEnum,
@@ -118,6 +172,8 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           dataFormat: filterStates.dataFormat,
           dataSensitivity: _selectedEnum,
         );
+      default:
+        print('DEFAULT Val');
     }
   }
 }
