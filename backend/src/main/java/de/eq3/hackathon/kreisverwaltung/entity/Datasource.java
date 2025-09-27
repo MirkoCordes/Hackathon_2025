@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -107,6 +109,11 @@ public class Datasource {
 
 	@Column
 	private Long estimatedSize; // Estimated size in bytes
+
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	User owner; // Owner of the datasource
 
 	// === FLEXIBLE TAGS ===
 	@ElementCollection
