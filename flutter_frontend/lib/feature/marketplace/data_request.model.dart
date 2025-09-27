@@ -22,6 +22,7 @@ class DataRequestModel {
   final String? closedAt;
   final String? closedReason;
   final bool open;
+  final int likes;
   final List<dynamic> activeResponseIds;
   final int responseCount;
   final String formattedAge;
@@ -47,6 +48,7 @@ class DataRequestModel {
     this.closedAt,
     this.closedReason,
     required this.open,
+    required this.likes,
     required this.activeResponseIds,
     required this.responseCount,
     required this.formattedAge,

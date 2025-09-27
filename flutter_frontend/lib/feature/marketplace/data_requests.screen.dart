@@ -94,6 +94,23 @@ class DataRequestsScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
+                          const Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('${request.likes} Likes', style: const TextStyle(fontSize: 10)),
+                              IconButton(
+                                icon: const Icon(Icons.thumb_up_outlined),
+                                onPressed: () async {
+                                  final controller = ref.read(dataRequestsControllerProvider.notifier);
+                                  await controller.likeRequest(request.id);
+                                },
+                                iconSize: 20,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       childrenPadding: const EdgeInsets.all(12),

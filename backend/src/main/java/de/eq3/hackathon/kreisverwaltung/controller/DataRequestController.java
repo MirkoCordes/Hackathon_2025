@@ -100,6 +100,24 @@ public class DataRequestController {
         }
     }
 
+    @PostMapping("/requests/{id}/like")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> likeDataRequest(@PathVariable Long id) {
+        try {
+            DataRequest request = dataRequestRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Datenwunsch nicht gefunden"));
+            
+            request.setLikes(request.getLikes() + 1);
+            request.setLastUpdated(LocalDateTime.now());
+            System.out.println(request.getLikes());
+            
+            DataRequest updatedRequest = dataRequestRepository.save(request);
+            return ResponseEntity.ok(updatedRequest);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Fehler beim Liken des Datenwunsches: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/requests/{id}")
     public ResponseEntity<DataRequest> getDataRequest(@PathVariable Long id) {
         Optional<DataRequest> request = dataRequestRepository.findById(id);

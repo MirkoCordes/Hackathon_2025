@@ -24,4 +24,16 @@ class DataRequestsController extends _$DataRequestsController {
       // Handle error if needed
     }
   }
+
+  Future<void> likeRequest(int requestId) async {
+    try {
+      final DataRequestsRepository repository = DataRequestsRepository();
+      await repository.likeRequest(requestId);
+      // Refresh the list after liking a request
+      state = AsyncValue.loading();
+      state = await AsyncValue.guard(() => repository.get('OPEN', null, null));
+    } catch (e) {
+      // Handle error if needed
+    }
+  }
 }
