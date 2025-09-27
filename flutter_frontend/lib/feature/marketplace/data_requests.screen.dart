@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_frontend/feature/catalog/dataset.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.controller.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.model.dart';
 import 'package:flutter_frontend/feature/marketplace/data_request_create.widget.dart';
+import 'package:flutter_frontend/feature/my_datasets/my_datasets.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DataRequestsScreen extends ConsumerWidget {
@@ -12,6 +15,7 @@ class DataRequestsScreen extends ConsumerWidget {
     final AsyncValue<DataRequestsModel> state = ref.watch(
       dataRequestsControllerProvider,
     );
+    final myDatasetsState = ref.watch(myDatasetsControllerProvider);
 
     return Column(
       children: [
@@ -116,7 +120,104 @@ class DataRequestsScreen extends ConsumerWidget {
                             label: const Text('Antworten'),
                             onPressed: () {
                               // Hier deine Logik zum Beantworten der Anfrage
-                              debugPrint('Antwort auf Anfrage ${request.id}');
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  String replyMessage = '';
+                                  Dataset? selectedDataset;
+                                  return StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setState) {
+                                      return myDatasetsState.when(
+                                        loading:
+                                            () => const AlertDialog(
+                                              title: Text('Lade Datensätze...'),
+                                              content: Center(child: CircularProgressIndicator()),
+                                            ),
+                                        error:
+                                            (error, stack) => AlertDialog(
+                                              title: const Text('Fehler'),
+                                              content: Text('Fehler beim Laden der Datensätze: $error'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(),
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            ),
+                                        data: (data) {
+                                          final datasets = data.datasources;
+                                          if (datasets.isEmpty) {
+                                            return AlertDialog(
+                                              title: const Text('Keine Datensätze verfügbar'),
+                                              content: const Text('Sie haben noch keine Datensätze erstellt.'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.of(context).pop(),
+                                                  child: const Text('OK'),
+                                                ),
+                                              ],
+                                            );
+                                          }
+
+                                          return AlertDialog(
+                                            title: const Text('Antwort auf Anfrage'),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                TextField(
+                                                  decoration: const InputDecoration(
+                                                    labelText: 'Nachricht',
+                                                    border: OutlineInputBorder(),
+                                                  ),
+                                                  onChanged: (value) => replyMessage = value,
+                                                  maxLines: 3,
+                                                ),
+                                                const SizedBox(height: 16),
+                                                StatefulBuilder(
+                                                  builder: (context, setDropdownState) {
+                                                    return DropdownButtonFormField<Dataset>(
+                                                      decoration: const InputDecoration(
+                                                        labelText: 'Datensatz auswählen',
+                                                        border: OutlineInputBorder(),
+                                                      ),
+                                                      value: selectedDataset,
+                                                      items:
+                                                          datasets
+                                                              .map(
+                                                                (ds) => DropdownMenuItem(
+                                                                  value: ds,
+                                                                  child: Text(ds.title),
+                                                                ),
+                                                              )
+                                                              .toList(),
+                                                      onChanged:
+                                                          (value) => setDropdownState(() => selectedDataset = value),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                child: const Text('Abbrechen'),
+                                                onPressed: () => Navigator.of(context).pop(),
+                                              ),
+                                              ElevatedButton(
+                                                child: const Text('Antwort senden'),
+                                                onPressed: () {
+                                                  // TODO: Handle reply logic with replyMessage and selectedDataset
+                                                  debugPrint('Antwort: $replyMessage, Datensatz: $selectedDataset');
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),
