@@ -9,17 +9,20 @@ class FilterListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        FilterWidget(types: Category.values, typeName: 'Kategorie'),
-        FilterWidget(types: DataFormat.values, typeName: 'Format'),
-        FilterWidget(types: AccessLevel.values, typeName: 'Zugriffsart'),
-        FilterWidget(
-          types: DataSensitivity.values,
-          typeName: 'Datensesibilität',
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsetsGeometry.fromLTRB(64, 8, 64, 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          FilterWidget(types: Category.values, typeName: 'Kategorie'),
+          FilterWidget(types: DataFormat.values, typeName: 'Format'),
+          FilterWidget(types: AccessLevel.values, typeName: 'Zugriffsart'),
+          FilterWidget(
+            types: DataSensitivity.values,
+            typeName: 'Datensesibilität',
+          ),
+        ],
+      ),
     );
   }
 }
