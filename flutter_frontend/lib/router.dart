@@ -3,9 +3,11 @@ import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.scr
 import 'package:flutter_frontend/feature/login/login_screen.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.screen.dart';
 import 'package:flutter_frontend/feature/my_datasets/my_datasets.screen.dart';
+import 'package:flutter_frontend/feature/my_data_requests/my_data_requests.screen.dart';
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
 import 'package:flutter_frontend/feature/user/user_profile_page.dart';
 import 'package:flutter_frontend/feature/certificate/certificate_pending_page.dart';
+import 'package:flutter_frontend/feature/impressum/impressum.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -41,13 +43,22 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/dataRequests',
       name: 'dataRequests',
-      builder:
-          (context, state) => const AppScaffold(body: DataRequestsScreen()),
+      builder: (context, state) => const AppScaffold(body: DataRequestsScreen()),
     ),
     GoRoute(
       path: '/myDatasets',
       name: 'myDatasets',
       builder: (context, state) => const AppScaffold(body: MyDatasetsScreen()),
+    ),
+    GoRoute(
+      path: '/myDataRequests',
+      name: 'myDataRequests',
+      builder: (context, state) => const AppScaffold(body: MyDataRequestsScreen()),
+    ),
+    GoRoute(
+      path: '/impressum',
+      name: 'impressum',
+      builder: (context, state) => const ImpressumPage(),
     ),
   ],
 );

@@ -38,16 +38,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/public/**").permitAll()
+                        auth -> auth.requestMatchers("/**").permitAll()
+
                                 .requestMatchers("/h2-console/**").permitAll()
                                 // OpenAPI/Swagger endpoints
+                                .requestMatchers("/api/**").authenticated()
                                 .requestMatchers("/api/docs/**").permitAll()
+                                .requestMatchers("/api/public/**").permitAll()
                                 .requestMatchers("/api/swagger-ui/**").permitAll()
                                 .requestMatchers("/api/swagger-ui.html").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers("/api/auth/**").permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -86,6 +86,7 @@ class _DataRequestFormWidgetState extends State<DataRequestFormWidget> {
         closedAt: null,
         closedReason: null,
         open: true,
+        likes: 0, // New requests start with 0 likes
         activeResponseIds: [],
         responseCount: 0,
         formattedAge: '',

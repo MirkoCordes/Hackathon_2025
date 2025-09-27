@@ -38,7 +38,7 @@ class LoginScreen extends ConsumerWidget {
                 children: <Widget>[
                   // Logo above the login form
                   Image.asset(
-                    'assets/images/LogoGroßTransparent2.png',
+                    'assets/images/logoLarge.png',
                     height: 120,
                   ),
                   const SizedBox(height: 24),
@@ -51,18 +51,14 @@ class LoginScreen extends ConsumerWidget {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.person),
                     ),
-                    validator:
-                        (value) =>
-                            value!.isEmpty
-                                ? 'Benutzername erforderlich.'
-                                : null,
+                    validator: (value) => value!.isEmpty ? 'Benutzername erforderlich.' : null,
 
                     // Fehler beim Tippen zurücksetzen
                   ),
                   const SizedBox(height: 16),
 
                   // Passwort
-                    TextFormField(
+                  TextFormField(
                     controller: _passwordController,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
@@ -71,21 +67,18 @@ class LoginScreen extends ConsumerWidget {
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.lock),
                     ),
-                    validator: (value) =>
-                      value!.length < 4
-                        ? 'Passwort muss min. 4 Zeichen haben.'
-                        : null,
+                    validator: (value) => value!.length < 4 ? 'Passwort muss min. 4 Zeichen haben.' : null,
                     // Fehler beim Tippen zurücksetzen
                     onFieldSubmitted: (_) async {
                       await controller.login(
-                      _usernameController.text,
-                      _passwordController.text,
+                        _usernameController.text,
+                        _passwordController.text,
                       );
                       if (context.mounted) {
-                      GoRouter.of(context).goNamed('catalog');
+                        GoRouter.of(context).goNamed('catalog');
                       }
                     },
-                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   const SizedBox(height: 12),

@@ -99,6 +99,9 @@ public class DataRequest {
     @Column
     private LocalDateTime closedAt;
 
+    @Column(nullable = false)
+    private Integer likes = 0; // Anzahl der Personen, die diese Daten auch benötigen
+
     @Column
     private String closedReason; // Warum wurde der Request geschlossen?
 

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.controller.dart';
 import 'package:flutter_frontend/feature/marketplace/data_requests.model.dart';
 import 'package:flutter_frontend/feature/marketplace/data_request_create.widget.dart';
+import 'package:flutter_frontend/feature/my_datasets/my_datasets.controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_frontend/feature/marketplace/data_request_reply_dialog.dart';
 
 class DataRequestsScreen extends ConsumerWidget {
   const DataRequestsScreen({super.key});
@@ -12,6 +15,7 @@ class DataRequestsScreen extends ConsumerWidget {
     final AsyncValue<DataRequestsModel> state = ref.watch(
       dataRequestsControllerProvider,
     );
+    final myDatasetsState = ref.watch(myDatasetsControllerProvider);
 
     return Column(
       children: [
@@ -90,6 +94,23 @@ class DataRequestsScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
+                          const Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text('${request.likes} Likes', style: const TextStyle(fontSize: 10)),
+                              IconButton(
+                                icon: const Icon(Icons.thumb_up_outlined),
+                                onPressed: () async {
+                                  final controller = ref.read(dataRequestsControllerProvider.notifier);
+                                  await controller.likeRequest(request.id);
+                                },
+                                iconSize: 20,
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       childrenPadding: const EdgeInsets.all(12),
@@ -114,9 +135,21 @@ class DataRequestsScreen extends ConsumerWidget {
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.reply),
                             label: const Text('Antworten'),
-                            onPressed: () {
-                              // Hier deine Logik zum Beantworten der Anfrage
-                              debugPrint('Antwort auf Anfrage ${request.id}');
+                            onPressed: () async {
+                              // Antwort-Dialog öffnen
+                              await showDialog(
+                                context: context,
+                                builder:
+                                    (context) => DataRequestReplyDialog(
+                                      dataRequest: request,
+                                      myDatasetsState: myDatasetsState,
+                                      onSubmit: (response) async {
+                                        debugPrint('Response erstellt: ${response.toJson()}');
+                                        final controller = ref.read(dataRequestsControllerProvider.notifier);
+                                        await controller.createResponse(request.id, response);
+                                      },
+                                    ),
+                              );
                             },
                           ),
                         ),

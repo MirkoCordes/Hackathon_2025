@@ -21,73 +21,77 @@ class AppScaffold extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Navigator.of(context).canPop()
-            ? null
-            : GestureDetector(
-                onTap: () {
-                  if(context.mounted){
-                    GoRouter.of(context).go('/catalog');
-                  }
-                },
-                child: Tooltip(
-                  message: 'Startseite',
-                  child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        fontFamily: 'Cascadia Code',
-                        fontSize: 20,
-                        color: Colors.black,
+        title:
+            Navigator.of(context).canPop()
+                ? null
+                : GestureDetector(
+                  onTap: () {
+                    if (context.mounted) {
+                      GoRouter.of(context).go('/catalog');
+                    }
+                  },
+                  child: Tooltip(
+                    message: 'Startseite',
+                    child: RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontFamily: 'Cascadia Code',
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                        children: [
+                          const TextSpan(text: 'Ostfriesland '),
+                          const TextSpan(
+                            text: 'Data',
+                            style: TextStyle(color: Color(0xFFFF3838)),
+                          ),
+                          const TextSpan(
+                            text: 'Hub',
+                            style: TextStyle(color: Color(0xFF4242FF)),
+                          ),
+                        ],
                       ),
-                      children: [
-                        const TextSpan(text: 'Ostfriesland '),
-                        const TextSpan(
-                          text: 'Data',
-                          style: TextStyle(color: Color(0xFFFF3838)),
-                        ),
-                        const TextSpan(
-                          text: 'Hub',
-                          style: TextStyle(color: Color(0xFF4242FF)),
-                        ),
-                      ],
                     ),
                   ),
                 ),
-              ),
         // Show a close (X) button on the leading side when this route can be popped.
         // That allows pushed routes (like /user) to be closed with an X.
-        leading: Navigator.of(context).canPop()
-            ? IconButton(
-                tooltip: 'Schließen',
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                },
-              )
-            : Builder(
-                builder: (context) => IconButton(
-                  tooltip: 'Menü',
-                  icon: Image.asset('assets/images/IconKleinTransparent.png'), // Custom icon path
+        leading:
+            Navigator.of(context).canPop()
+                ? IconButton(
+                  tooltip: 'Schließen',
+                  icon: const Icon(Icons.close),
                   onPressed: () {
-                    Scaffold.of(context).openDrawer();
+                    GoRouter.of(context).pop();
                   },
+                )
+                : Builder(
+                  builder:
+                      (context) => IconButton(
+                        tooltip: 'Menü',
+                        icon: Image.asset('assets/images/IconKleinTransparent.png'), // Custom icon path
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      ),
                 ),
-              ),
         actions: [
           // Certificate review icon - navigates to /certificates/review using push so it can be popped/closed
           CertificateReviewWidget(),
 
           // Welcome message left to the profile icon
           state.when(
-            data: (displayUser) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                'Willkommen, ${displayUser.firstName}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
+            data:
+                (displayUser) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    'Willkommen, ${displayUser.firstName}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
-              ),
-            ),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, st) => Center(child: Text('Fehler: $e')),
           ),
@@ -113,6 +117,30 @@ class AppScaffold extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width: 1.0,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).pushNamed('impressum');
+                },
+                child: const Text('Impressum'),
+              ),
+            ],
+          ),
+        ),
+      ),
       drawer: Drawer(
         child: ListView(
           // Important: Remove any padding from the ListView.
@@ -120,29 +148,37 @@ class AppScaffold extends ConsumerWidget {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(color: Color(0xFFE9E9DD)),
-              child: Image.asset('assets/images/LogoGroßTransparent2.png'),
+              child: Image.asset('assets/images/logoLarge.png'),
             ),
             ListTile(
               title: const Text('Katalog'),
               onTap: () {
-                if(context.mounted){
-                    GoRouter.of(context).goNamed('catalog');
-                  }
+                if (context.mounted) {
+                  GoRouter.of(context).goNamed('catalog');
+                }
               },
             ),
             ListTile(
               title: const Text('Datenbedarf'),
               onTap: () {
-                if(context.mounted){
+                if (context.mounted) {
                   GoRouter.of(context).goNamed('dataRequests');
                 }
               },
             ),
             ListTile(
-              title: const Text('Meine Daten'),
+              title: const Text('Meine Datenquellen'),
               onTap: () {
-                if(context.mounted){
+                if (context.mounted) {
                   GoRouter.of(context).goNamed('myDatasets');
+                }
+              },
+            ),
+            ListTile(
+              title: const Text('Meine Datenanfragen'),
+              onTap: () {
+                if (context.mounted) {
+                  GoRouter.of(context).goNamed('myDataRequests');
                 }
               },
             ),
