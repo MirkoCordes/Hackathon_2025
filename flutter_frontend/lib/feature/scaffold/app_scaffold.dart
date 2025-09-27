@@ -143,7 +143,7 @@ class AppScaffold extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: const Text('Meine Daten'),
+              title: const Text('Meine Datenquellen'),
               onTap: () {
                 if (context.mounted) {
                   GoRouter.of(context).goNamed('myDatasets');
@@ -151,7 +151,7 @@ class AppScaffold extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: const Text('Meine Anfragen'),
+              title: const Text('Meine Datenanfragen'),
               onTap: () {
                 if (context.mounted) {
                   GoRouter.of(context).goNamed('myDataRequests');
