@@ -30,7 +30,7 @@ class AppScaffold extends ConsumerWidget {
                   }
                 },
                 child: Tooltip(
-                  message: 'Zur Startseite',
+                  message: 'Startseite',
                   child: RichText(
                     text: TextSpan(
                       style: const TextStyle(
