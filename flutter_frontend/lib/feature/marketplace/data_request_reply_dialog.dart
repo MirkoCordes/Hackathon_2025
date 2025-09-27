@@ -215,22 +215,14 @@ class _DataRequestReplyDialogState extends ConsumerState<DataRequestReplyDialog>
                                     .map(
                                       (type) => DropdownMenuItem<DataRequestResponseType>(
                                         value: type,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              type.displayName,
-                                              style: const TextStyle(fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              type.description,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey.shade600,
-                                              ),
-                                            ),
-                                          ],
+                                        child: Tooltip(
+                                          message: type.description,
+                                          child: Text(
+                                            type.displayName,
+                                            style: const TextStyle(fontWeight: FontWeight.w500),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
                                         ),
                                       ),
                                     )
