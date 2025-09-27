@@ -117,6 +117,30 @@ class AppScaffold extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width: 1.0,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).pushNamed('impressum');
+                },
+                child: const Text('Impressum'),
+              ),
+            ],
+          ),
+        ),
+      ),
       drawer: Drawer(
         child: ListView(
           // Important: Remove any padding from the ListView.

@@ -7,6 +7,7 @@ import 'package:flutter_frontend/feature/my_data_requests/my_data_requests.scree
 import 'package:flutter_frontend/feature/scaffold/app_scaffold.dart';
 import 'package:flutter_frontend/feature/user/user_profile_page.dart';
 import 'package:flutter_frontend/feature/certificate/certificate_pending_page.dart';
+import 'package:flutter_frontend/feature/impressum/impressum.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
@@ -53,6 +54,11 @@ final GoRouter router = GoRouter(
       path: '/myDataRequests',
       name: 'myDataRequests',
       builder: (context, state) => const AppScaffold(body: MyDataRequestsScreen()),
+    ),
+    GoRoute(
+      path: '/impressum',
+      name: 'impressum',
+      builder: (context, state) => const ImpressumPage(),
     ),
   ],
 );
