@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/feature/certificate/certificate_upload.controller.dart';
 import 'package:flutter_frontend/feature/user/certificate.controller.dart';
 import 'package:flutter_frontend/feature/user/certificate.entity.dart';
 import 'package:flutter_frontend/feature/user/certificate.repository.dart';
@@ -11,14 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CertificateWidget extends ConsumerWidget {
   // Optionally pass a list of CertificateType that should be shown instead
   // of fetching available types from the backend.
-  final List<CertificateType>? availableTypes;
-  final bool popOnSuccess;
 
-  const CertificateWidget({
-    super.key,
-    this.availableTypes,
-    this.popOnSuccess = false,
-  });
+  const CertificateWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,8 +31,6 @@ class CertificateWidget extends ConsumerWidget {
               ref.invalidate(certificateListControllerProvider);
             } catch (_) {}
           },
-          availableTypes: availableTypes,
-          popOnSuccess: popOnSuccess,
         ),
       ],
     );
@@ -49,14 +42,8 @@ class CertificateWidget extends ConsumerWidget {
 
 class _CertificateUploadForm extends ConsumerStatefulWidget {
   final Future<void> Function() onUploaded;
-  final List<CertificateType>? availableTypes;
-  final bool popOnSuccess;
 
-  const _CertificateUploadForm({
-    required this.onUploaded,
-    this.availableTypes,
-    this.popOnSuccess = false,
-  });
+  const _CertificateUploadForm({required this.onUploaded});
 
   @override
   _CertificateUploadFormState createState() => _CertificateUploadFormState();
@@ -99,6 +86,8 @@ class _CertificateUploadFormState
   }
 
   Future<void> _submit() async {
+    final state = ref.watch(certificateUploadControllerProvider);
+
     // Validate inputs and provide feedback
     if (_selectedType == null) {
       ScaffoldMessenger.of(
@@ -145,7 +134,7 @@ class _CertificateUploadFormState
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Upload erfolgreich')));
-      if (popOnSuccess) {
+      if (state.popOnSuccess) {
         Navigator.of(context).pop();
       }
     } catch (e) {
@@ -160,17 +149,18 @@ class _CertificateUploadFormState
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(certificateUploadControllerProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // If availableTypes are provided, show them directly; otherwise
         // fall back to the provider that fetches types from backend.
-        if (widget.availableTypes != null)
+        if (state.availableTypes != null)
           DropdownButton<CertificateType>(
             value: _selectedType,
             hint: const Text('Typ auswählen'),
             items:
-                widget.availableTypes!
+                state.availableTypes!
                     .map(
                       (t) => DropdownMenuItem(
                         value: t,

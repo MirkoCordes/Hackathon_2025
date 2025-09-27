@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/feature/catalog/catalog.controller.dart';
 import 'package:flutter_frontend/feature/catalog/dataset.dart';
+import 'package:flutter_frontend/feature/certificate/certificate_upload.controller.dart';
 import 'package:flutter_frontend/feature/certificate/certificate_upload.widget.dart';
 import 'package:flutter_frontend/feature/datasource_detail/datasource_detail.controller.dart';
 import 'package:flutter_frontend/router.dart';
@@ -85,11 +86,18 @@ class DatasetListIconButton extends ConsumerWidget {
       );
     }
 
+    final CertificateUploadController certificateUploadController = ref.watch(
+      certificateUploadControllerProvider.notifier,
+    );
+
     return IconButton(
       onPressed: () async {
-        // TODO: request new certificate
+        //request new certificate
+        await certificateUploadController.updateStates(
+          popOnSuccess: e.requiresCertificate,
+          availableTypes: e.requiredCertificateTypes,
+        );
         await showConfirmationDialog(context, e);
-        //await router.pushNamed('datasources', pathParameters: pathParams);
       },
       icon: const Icon(Icons.key),
       color: Theme.of(context).colorScheme.primary,
@@ -108,10 +116,7 @@ class DatasetListIconButton extends ConsumerWidget {
               const Text(
                 'Laden sie hier das benötigte Zertifikat hoch, um den Zugriff zu beantragen.',
               ),
-              CertificateWidget(
-                availableTypes: e.requiredCertificateTypes,
-                popOnSuccess: true,
-              ),
+              CertificateWidget(),
             ],
           ),
           actions: <Widget>[
