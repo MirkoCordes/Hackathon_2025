@@ -12,6 +12,26 @@ import 'package:http/http.dart' as http;
 class DataRequestsRepository {
   static const String url = 'http://localhost:8080/api/data-marketplace';
 
+  /// Like a data request
+  Future<void> likeRequest(int requestId) async {
+    final String? jwt = await JwtRepository().getJwt();
+    if (jwt == null) {
+      throw Exception('Authentication required');
+    }
+
+    final response = await http.post(
+      Uri.parse('$url/requests/$requestId/like'),
+      headers: {
+        'Authorization': 'Bearer $jwt',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to like request');
+    }
+  }
+
   /// Creates a new data request
   Future<DataRequestModel> createDataRequest(DataRequestModel dataRequest) async {
     final String? jwt = await JwtRepository().getJwt();
