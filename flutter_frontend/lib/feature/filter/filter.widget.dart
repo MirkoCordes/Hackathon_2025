@@ -27,8 +27,6 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
     final CatalogController catalogController = ref.read(
       catalogControllerProvider.notifier,
     );
-    final catalogState = ref.read(catalogControllerProvider);
-    final filterListState = ref.read(filterControllerProvider);
 
     // update Value on Provider
     final filterController = ref.watch(
@@ -56,6 +54,14 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                           _previousSelectedEnum = _selectedEnum;
                           _selectedEnum = null;
                         });
+
+                        final catalogState = ref.watch(
+                          catalogControllerProvider,
+                        );
+                        final filterListState = ref.watch(
+                          filterControllerProvider,
+                        );
+
                         await updateFilterList(
                           filterController,
                           filterListState,
@@ -84,6 +90,9 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
               _previousSelectedEnum = _selectedEnum;
               _selectedEnum = v;
             });
+
+            final catalogState = ref.watch(catalogControllerProvider);
+            final filterListState = ref.watch(filterControllerProvider);
 
             await updateFilterList(filterController, filterListState);
             await catalogController.search(

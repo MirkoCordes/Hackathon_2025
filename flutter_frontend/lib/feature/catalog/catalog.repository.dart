@@ -31,16 +31,25 @@ class CatalogRepository {
     };
 
     if (category != null) {
-      queryParameter.putIfAbsent('category', () => category);
+      queryParameter.putIfAbsent('category', () => category.name.toUpperCase());
     }
     if (dataFormat != null) {
-      queryParameter.putIfAbsent('dataFormat', () => dataFormat);
+      queryParameter.putIfAbsent(
+        'dataFormat',
+        () => dataFormat.name.toUpperCase(),
+      );
     }
     if (accessLevel != null) {
-      queryParameter.putIfAbsent('accessLevel', () => accessLevel);
+      queryParameter.putIfAbsent(
+        'accessLevel',
+        () => accessLevel.name.toUpperCase(),
+      );
     }
     if (dataSensitivity != null) {
-      queryParameter.putIfAbsent('dataSensitivity', () => dataSensitivity);
+      queryParameter.putIfAbsent(
+        'dataSensitivity',
+        () => dataSensitivity.name.toUpperCase(),
+      );
     }
 
     final response = await http.get(
