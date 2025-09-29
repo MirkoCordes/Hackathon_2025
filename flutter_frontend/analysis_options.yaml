@@ -1,0 +1,253 @@
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  trailing_commas: preserve
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    #     require_trailing_commas: false
+    always_use_package_imports: true
+    constant_identifier_names: true
+    prefer_final_locals: true
+    use_named_constants: true
+    use_decorated_box: true
+    use_colored_box: true
+    discarded_futures: true
+    avoid_void_async: true
+    always_declare_return_types: true
+    unreachable_from_main: true
+    unnecessary_to_list_in_spreads: true
+    avoid_print: true
+    comment_references: true
+    unnecessary_await_in_return: true
+    unawaited_futures: true
+    cancel_subscriptions: true
+    eol_at_end_of_file: true
+    close_sinks: true
+
+analyzer:
+  exclude:
+    - lib/**/*.g.dart
+    - lib/**/*.freezed.dart
+  errors:
+    invalid_annotation_target: ignore
+    todo: ignore
+    missing_return: error
+  plugins:
+    - custom_lint
+
+custom_lint:
+  rules:
+    # Explicitly disable one lint rule
+    - avoid_manual_providers_as_generated_provider_dependency: false
+
+dart_code_metrics:
+  extends:
+    - recommended
+  metrics-exclude:
+    - test/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - lib/oss_licenses.dart
+  metrics:
+    coupling-between-object-classes: 12
+    cyclomatic-complexity: 20
+    depth-of-inheritance-tree: 5
+    halstead-volume: 150
+    lines-of-code: 100
+    maintainability-index: 50
+    maximum-nesting-level: 5
+    number-of-added-methods: 10
+    number-of-external-imports: 5
+    number-of-implemented-interfaces: 5
+    number-of-imports: 10
+    number-of-methods: 10
+    number-of-overridden-methods: 10
+    number-of-parameters: 4
+    number-of-used-widgets: 20
+    response-for-class: 55
+    source-lines-of-code: 50
+    weight-of-class: 0.33
+    tight-class-cohesion: 0.33
+    weighted-methods-per-class: 35
+    widgets-nesting-level: 10
+    technical-debt:
+      threshold: 1
+      todo-cost: 161
+      ignore-cost: 320
+      ignore-for-file-cost: 396
+      as-dynamic-cost: 322
+      deprecated-annotations-cost: 37
+      file-nullsafety-migration-cost: 41
+
+  rules:
+    - avoid-unnecessary-call: false # https://dcm.dev/docs/rules/common/avoid-unnecessary-call
+    - avoid-passing-async-when-sync-expected: false
+    - avoid-unrelated-type-assertions: false # is warning when you do a iFeature check with "is"
+    - avoid-unnecessary-type-assertions: false # is warning when you do a iFeature check with "is!"
+    - avoid-unrelated-type-casts: false # is warning when you do a iFeature check with "as"
+    - prefer-match-file-name: false # is not working with our naming conventions
+    - prefer-prefixed-global-constants: false # https://dcm.dev/docs/rules/common/prefer-prefixed-global-constants
+    # riverpod rules
+    - use-ref-read-synchronously: true
+    - avoid-calling-notifier-members-inside-build: true
+    - avoid-notifier-constructors: true
+    - dispose-provided-instances: true
+    - avoid-ref-read-inside-build: true
+    - avoid-ref-watch-outside-build: true
+    - avoid-unnecessary-consumer-widgets: true
+    - avoid-redundant-async: false
+    - unnecessary-trailing-comma: false
+
+    # see https://dcm.dev/docs/rules/common/avoid-nullable-interpolation for more information
+    - avoid-nullable-interpolation:
+        ignored-invocations:
+          - fine # HmipLogger
+          - info # HmipLogger
+          - warning # HmipLogger
+          - severe # HmipLogger
+          - log
+          - debugPrint
+    # see https://dcm.dev/docs/rules/flutter/prefer-single-widget-per-file/ for more information
+    - prefer-single-widget-per-file:
+        ignore-private-widgets: true
+
+    # Add all recommended widgets rules
+    - banned-usage:
+        entries:
+          # - name: NumberFormat.decimalPatternDigits
+          #   description: Use LocalizedDecimalFormattingExtension instead
+          #   severity: error
+          # # - type: int
+          # #   entries:
+          # #       - name: toString
+          # #         description: only use to transfer int not to show in UI because group separator will be missing (use LocalizedDecimalFormattingExtension)
+          # #         severity: warning
+          # - name: symbols.DECIMAL_SEP
+          #   description: Use UserLocaleSettings().decimalSeparator instead
+          #   severity: error
+          # - name: symbols.GROUP_SEP
+          #   description: Use UserLocaleSettings().groupingSeparator instead
+          #   severity: error
+          # - name: toStringAsFixed
+          #   description: only use to cut digits for double not to show in UI (use LocalizedDecimalFormattingExtension)
+          #   severity: warning
+          # # Datetime
+          # - ident: HmipBaseDatePicker
+          #   description: Please use HmipDateTimePicker instead
+          #   severity: warning
+          # - ident: HmipBaseTimePicker
+          #   description: Please use HmipDateTimePicker instead
+          #   severity: warning
+          # - ident: CupertinoDatePicker
+          #   description: Please use HmipDateTimePicker instead
+          #   severity: warning
+          # - ident: CalendarDatePicker
+          #   description: Please use HmipDateTimePicker instead
+          #   severity: warning
+          # - ident: HmipBaseDateTimePickerBottomSheet
+          #   description: Please use HmipDateTimePickerBottomSheet or HmipDateTimePickerSwitchableBottomSheet instead
+          #   severity: warning
+          # # List tiles
+          # - ident: HmipBaseListTile
+          #   description: Please use HmipListTile or HmipComplexListTile instead
+          #   severity: warning
+          # # Dialogs
+          # - type: DialogService
+          #   entries:
+          #     - ident: showDialogDeprecated
+          #       description: Please use showDialog instead
+          #       severity: warning
+          # - type: DialogUtil
+          #   entries:
+          #     - ident: showAlertDialogDeprecated
+          #       description: Please use showAlertDialog instead
+          #       severity: warning
+          # - ident: HmipAlertDialogDeprecated
+          #   description: Please use DialogUtil or DialogService instead
+          #   severity: warning
+          # - ident: HmipAlertDialog
+          #   description: Please use DialogUtil or DialogService instead
+          #   severity: warning
+          # - ident: HmipTextInputDialog
+          #   description: Please use DialogUtil or DialogService instead
+          #   severity: warning
+          # - ident: HmipSelectionDialog
+          #   description: Please use DialogUtil or DialogService instead
+          #   severity: warning
+          # # color scheme
+          # - type: ThemeData
+          #   ident: primaryColor
+          #   description: "Use color scheme: colorScheme.primary"
+          #   severity: error
+          # # Icon -> idea for improvement: create a custom rule that check parent widget
+          # - ident: Icon
+          #   description: Use the HmipIcon if it is not getting the color style from the parent widget like a button or a app bar
+          #   severity: warning
+          # # Text fields
+          # - ident: TextField
+          #   description: Use the HmipTextFields in folder ui/widgets/textfield
+          #   severity: warning
+          # - ident: TextFormField
+          #   description: Use the HmipTextFields in folder ui/widgets/textfield
+          #   severity: warning
+          # # Text -> idea for improvement: create a custom rule that check parent widget for button or alert title
+          # - ident: Text
+          #   description: Use the HmipText... in folder ui/widgets/text if it is not in a button or a alert title.
+          #   severity: warning
+          # # List view
+          # - ident: ListView
+          #   description: Use the HmipListView or another list view from ui/widgets/list/ folder
+          #   severity: warning
+          # - ident: ListView.builder
+          #   description: Use the HmipListView or another list view from ui/widgets/list/ folder
+          #   severity: warning
+          # # Switch
+          # - ident: Switch
+          #   description: Use the HmipSwitch
+          #   severity: warning
+          # # App bar
+          # - ident: AppBar
+          #   description: Use the DetailAppBar or if you're on root (home) use RootAppBar
+          #   severity: warning
+          # # Tab bar
+          # - ident: TabBar
+          #   description: Use the HmipTabBar
+          #   severity: warning
+          # # HTML Web view
+          # - ident: Html
+          #   description: Use the HmipHtmlView
+          #   severity: warning
+          # # Buttons
+          # - ident: FilledButton
+          #   description: Use a Hmip... button from lib/ui/widgets/buttons or the primary button
+          #   severity: warning
+          # - ident: ElevatedButton
+          #   description: Use a Hmip... button from lib/ui/widgets/buttons or the primary button
+          #   severity: warning
+          # - ident: OutlinedButton
+          #   description: Use a Hmip... button from lib/ui/widgets/buttons or the secondary button
+          #   severity: warning
+          # - ident: FloatingActionButton
+          #   description: Use a HmipFloatingActionButton
+          #   severity: warning
+          # - ident: FloatingActionButton.large
+          #   description: Use a HmipFloatingActionButton
+          #   severity: warning
+          # - ident: IconButton
+          #   description: Use a HmipIconButton
+          #   severity: warning
+          # Navigation
+          # - type: NavigatorState
+          #   entries:
+          #     - ident: pop
+          #       description: Use context.pop() instead.
+          # - type: GoRouter
+          #   entries:
+          #     - ident: pop
+          #       description: Use context.pop() instead.
+          # Logging
+          # - ident: Logger
+          #   description: Use the HmipLogger instead
+          #   severity: warning
